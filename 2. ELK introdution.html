@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-09-03" />
+  <title>2. ELK introdution</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">2. ELK introdution</h1>
+<p class="date">2024-09-03</p>
+</header>
+<h1 id="elk-stack-introduction-day-2">ELK Stack Introduction | Day
+2</h1>
+<hr />
+<h2 id="resumen">Resumen</h2>
+<blockquote>
+<p>Se obtendrá un mejor entendimiento de que es la pila ELK y sus
+beneficios.</p>
+</blockquote>
+<hr />
+<h2 id="conceptos-clave">Conceptos Clave</h2>
+<ul>
+<li><strong>Elastic Search</strong>: Explicación breve.</li>
+<li><strong>Logstash</strong>: Explicación breve.</li>
+<li><strong>Kibana</strong>: Explicación breve.</li>
+</ul>
+<hr />
+<h2 id="elastic---logstash---kibana">ELASTIC - LOGSTASH - KIBANA</h2>
+<hr />
+<h4 id="elastic-search"><a href>Elastic Search</a></h4>
+<p>Elastic Search es una base de datos utilizada para almacenar
+registros de toda clase de fuente (windows, C, firewall, etc.). Elastic
+Search usa el lenguaje <code>ESQL</code> para realizar búsquedas,
+tambien usa <code>restful apis</code> y <code>Json</code>, lo que
+significa que puede usar varias aplicaciones para interactuar con su
+base de datos de una manera programable. ___ #### <a href>Logstash</a> Logstash recopila los datos de diversas fuentes, y
+los REENVÍA a Elastic Search, al reenviar ==normaliza== los datos para
+que puedan ser trabajados con Elastic Search. Es posible filtrar por ID
+de eventos u otros criterios, lo que ayudará a reducir el costo de la
+ingesta de Elastic Search.</p>
+<p><strong>PARSING (o análisis de campos)</strong>: A los elementos de
+un registro se les asignará una palabra clave que actuará como nombre de
+campo: <img role="img" aria-label="Pasted image 20240903141216.png" src="Pasted image 20240903141216.png" title="wikilink" alt="Pasted image 20240903141216.png" /> Sin embargo, no todos los
+registros tendrán un parsing listo para funcionar, por lo que es posible
+crear y configurar los nuestros, para extraer ciertos valores de los
+registros y asignarlos a un nombre de campo. Esta es una habilidad
+poderosa si se aprende a hacer.</p>
+<p>Existen 2 formas de recopilar datos: Beats y Elastic Agent:</p>
+<ul>
+<li><p><strong>Beats</strong>: existen 6 tipos de archivos diferentes
+para Beats, para recopilar la telemetría deseada, se debe instalar el
+Beat apropiado en el endpoint. <img role="img" aria-label="Pasted image 20240903134916.png" src="Pasted image 20240903134916.png" title="wikilink" alt="Pasted image 20240903134916.png" /></p></li>
+<li><p><strong>Elastic Agent</strong>: esta es la segunda forma de
+recopilar datos de telemetría. Puede recopilar todos los tipos de datos
+usando un agente unificado por host.</p></li>
+</ul>
+<hr />
+<h4 id="kibana"><a href>Kibana</a></h4>
+<p>Kibana nos permite tener una web GUI para consultar nuestros
+registros almacenados dentro de nuestra instancia de Elastic Search.</p>
+<p>Funciones integradas en Kibana: - <strong>Data Exploration</strong>:
+Especialmente la pestaña “Discover”, esta permite utilizar consultas
+<code>ESQL</code> para consultar los registros. - <strong>Machine
+Learning for anomaly detection</strong> - <strong>Elastic Maps for
+Geospatial Information</strong> - <strong>Kibana Lens</strong>: esta es
+una función integrada tambien conocida como ==Visualizations==, donde se
+puede arrastrar y soltar elementos para ayudar a construir los paneles.
+<img role="img" aria-label="Pasted image 20240903151845.png" src="Pasted image 20240903151845.png" title="wikilink" alt="Pasted image 20240903151845.png" /></p>
+<p>Todo esto permite que <code>Kibana</code>: - Busque datos rápidamente
+- Cree informes de visualizaciones - Crear Alertas</p>
+<p>A continuación, algunas similitudes con Splunk: <img role="img" aria-label="Pasted image 20240903133816.png" src="Pasted image 20240903133816.png" title="wikilink" alt="Pasted image 20240903133816.png" /></p>
+<hr />
+<h4 id="principales-beneficios-de-usar-elk">Principales beneficios de
+usar ELK</h4>
+<ol type="1">
+<li>Proporciona un registro centralizado</li>
+<li>Flexibilidad al momento de realizar la ingesta de registros (vía
+Beats o Agentes)</li>
+<li>Crear visualizaciones que proporcionen información importante de un
+vistazo</li>
+<li>Escalabilidad para entornos mas grandes o en crecimiento</li>
+<li>Integraciones para ELK disponibles en la comunidad, además muchos
+SIEM se basan en ELK, por lo que migrar a otros entornos podría ser
+bastante fácil</li>
+</ol>
+<hr />
+</body>
+</html>
