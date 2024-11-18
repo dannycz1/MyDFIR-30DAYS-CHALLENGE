@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-09-04" />
+  <title>4. Kibana Setup</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">4. Kibana Setup</h1>
+<p class="date">2024-09-04</p>
+</header>
+<h1 id="kibana-setup-tutorial-day-4">Kibana Setup Tutorial | Day 4</h1>
+<hr />
+<h2 id="resumen">Resumen</h2>
+<blockquote>
+<p>Aquí aprenderemos a configurar e instalar nuestra propia instancia de
+Kibana, esto la misma máquina Ubuntu donde instalamos Elasticsearch que
+vimos en el la nota anterior (Day 3)</p>
+</blockquote>
+<hr />
+<h2 id="conceptos-clave">Conceptos Clave</h2>
+<ul>
+<li><strong>Kibana</strong></li>
+<li><strong>Archivo de configuración de Kibana</strong></li>
+<li><strong>Token de Elasticsearch</strong></li>
+<li><strong>Key Stores</strong> de Kibana</li>
+</ul>
+<hr />
+<h2 id="pasos-o-procedimientos">Pasos o Procedimientos</h2>
+<p><strong>==Descargar e instalar Kibana==</strong></p>
+<figure>
+<img role="img" aria-label="Pasted image 20240910094708.png" src="Pasted image 20240910094708.png" title="wikilink" alt="Pasted image 20240910094708.png" />
+<figcaption aria-hidden="true">Pasted image
+20240910094708.png</figcaption>
+</figure>
+<figure>
+<img role="img" aria-label="Pasted image 20240904201737.png" src="Pasted image 20240904201737.png" title="wikilink" alt="Pasted image 20240904201737.png" />
+<figcaption aria-hidden="true">Pasted image
+20240904201737.png</figcaption>
+</figure>
+<p>verificamos e instalamos <img role="img" aria-label="Pasted image 20240904202640.png" src="Pasted image 20240904202640.png" title="wikilink" alt="Pasted image 20240904202640.png" /></p>
+<p><strong>==Archivo de configuración de Kibana==</strong></p>
+<p>Descomentar y configurar las siguientes líneas con la IP pública y el
+puerto deseado <img role="img" aria-label="Pasted image 20240904203123.png" src="Pasted image 20240904203123.png" title="wikilink" alt="Pasted image 20240904203123.png" /></p>
+<p>Reiniciamos el servicio <img role="img" aria-label="Pasted image 20240904204327.png" src="Pasted image 20240904204327.png" title="wikilink" alt="Pasted image 20240904204327.png" /></p>
+<p><strong>==Token de inscripción para Elasticsearch==</strong></p>
+<p>Revisamos los archivos binarios de Elasticsearch y ejecutamos el que
+nos genera tokens: <img role="img" aria-label="Pasted image 20240904205034.png" src="Pasted image 20240904205034.png" title="wikilink" alt="Pasted image 20240904205034.png" /></p>
+<p>Copiamos el token que se nos generó:</p>
+<pre><code>eyJ2ZXIiOiI4LjE0LjAiLCJhZHIiOlsiMTU1LjEzOC4xMzUuMTc5OjkyMDAiXSwiZmdyIjoiZDUzZDI0YTliZTBmZTUxMGQwMjkyYjdjN2Q5Y2QwZTNkMDQzMWU1NTEwN2QzNTNhNjk3NzkwYjFjMmRiOTlmNyIsImtleSI6IjhSSlgzSkVCY0gyaHB5Z3JuYTZQOkpQME9CZmUwUUx1cXRpSjVsTGFEbFEifQ==</code></pre>
+<blockquote>
+<p>[!warning] Atención El token generado por Elasticsearch tiene una
+duración de 30 minutos, si pasa ese tiempo debes generar un token
+nuevo</p>
+</blockquote>
+<p><strong>==Acceder a nuestra instancia de Kibana==</strong></p>
+<p>Si intentamos acceder usando http://155.138.135.179:5601 simplemente
+no podremos, ya que debemos verificar que tengamos las siguientes
+configuraciones realizadas: - [ ] habilitar el puerto en el Firewall de
+Vultr (o de la nube que corresponda) - [ ] habilitar el firewall en la
+instancia que estamos (ubuntu, ELK-Server) - [x] Si lo anterior no
+funciona verificar que los servicios estén corriendo</p>
+<p>HABILITAR LOS PUERTOS EN EL FIREWALL DE VULTR (Elegir “MyIP” en
+<code>Source</code>): <img role="img" aria-label="Pasted image 20240904211246.png" src="Pasted image 20240904211246.png" title="wikilink" alt="Pasted image 20240904211246.png" /></p>
+<p>HABILITAR EL PUERTO EN EL FIREWALL DEL SERVIDOR: <img role="img" aria-label="Pasted image 20240904211731.png" src="Pasted image 20240904211731.png" title="wikilink" alt="Pasted image 20240904211731.png" /></p>
+<p>Y ya hay acceso a nuestra instancia de Kibana! <img role="img" aria-label="Pasted image 20240904212111.png" src="Pasted image 20240904212111.png" title="wikilink" alt="Pasted image 20240904212111.png" /></p>
+<hr />
+<p>Ahora debemos pegar el token que habíamos generado previamente de
+Elasticsearch <img role="img" aria-label="Pasted image 20240904213932.png" src="Pasted image 20240904213932.png" title="wikilink" alt="Pasted image 20240904213932.png" /></p>
+<p>Luego buscamos el archivo binario que tiene el código de
+verificación: <img role="img" aria-label="Pasted image 20240904214441.png" src="Pasted image 20240904214441.png" title="wikilink" alt="Pasted image 20240904214441.png" /></p>
+<p>Ingresamos el código <img role="img" aria-label="Pasted image 20240904215409.png" src="Pasted image 20240904215409.png" title="wikilink" alt="Pasted image 20240904215409.png" /></p>
+<p>Y ya podemos ver el panel de login! <img role="img" aria-label="Pasted image 20240904215334.png" src="Pasted image 20240904215334.png" title="wikilink" alt="Pasted image 20240904215334.png" /></p>
+<p>El usuario y contraseña se nos proveyó justo después de instalar
+Elasticsearch, podemos buscarlo en las notas de la práctica del día 3
+<code>username:</code> elastic <code>password:</code>
+ZocD_AkpeOVCEyEGi98P</p>
+<p>Seleccionamos “Explore on my own” <img role="img" aria-label="Pasted image 20240904215752.png" src="Pasted image 20240904215752.png" title="wikilink" alt="Pasted image 20240904215752.png" /></p>
+<p><strong>==Instalar los “Key Stores” para que alertas personalizadas
+resistan reinicios==</strong></p>
+<p>La primera vez veremos este mensaje de advertencia: <img role="img" aria-label="Pasted image 20240904220714.png" src="Pasted image 20240904220714.png" title="wikilink" alt="Pasted image 20240904220714.png" /></p>
+<p>Obtenemos las claves de cifrado(<code>encryption keys</code>) con el
+siguiente binario: <img role="img" aria-label="Pasted image 20240904221131.png" src="Pasted image 20240904221131.png" title="wikilink" alt="Pasted image 20240904221131.png" /> <img role="img" aria-label="Pasted image 20240904221150.png" src="Pasted image 20240904221150.png" title="wikilink" alt="Pasted image 20240904221150.png" /></p>
+<p>Guardamos</p>
+<pre><code>xpack.encryptedSavedObjects.encryptionKey: baed4e759f9f4d7b26498722240ae42e
+xpack.reporting.encryptionKey: fb7a0106b06113acff31668fe1f20082
+xpack.security.encryptionKey: 802cc06632c71e483f74d8fbcbb8a789</code></pre>
+<p>Añadimos al Almacén de Claves (<code>Key Store</code>) con el
+siguiente binario: <img role="img" aria-label="Pasted image 20240904221654.png" src="Pasted image 20240904221654.png" title="wikilink" alt="Pasted image 20240904221654.png" /></p>
+<figure>
+<img role="img" aria-label="Pasted image 20240904222157.png" src="Pasted image 20240904222157.png" title="wikilink" alt="Pasted image 20240904222157.png" />
+<figcaption aria-hidden="true">Pasted image
+20240904222157.png</figcaption>
+</figure>
+<p>Reiniciamos el servicio:
+<code>systemctl restart kibana.service</code></p>
+<p>Loguearse nuevamente y ya no veras los mensajes de error…</p>
+<hr />
+</body>
+</html>

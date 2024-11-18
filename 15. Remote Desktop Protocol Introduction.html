@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-09-17" />
+  <title>15. Remote Desktop Protocol Introduction</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">15. Remote Desktop Protocol Introduction</h1>
+<p class="date">2024-09-17</p>
+</header>
+<h1 id="remote-desktop-protocol-introduction-day-15-high-level">Remote
+Desktop Protocol Introduction | Day 15 (High-Level)</h1>
+<hr />
+<h2 id="resumen">Resumen</h2>
+<blockquote>
+<p>Veremos de forma superficial que es RDP, cómo los atacantes abusan de
+RDP, cómo encontrar hosts con RDP expuesto en internet y que hacer para
+protegerse si tenemos RDP.</p>
+</blockquote>
+<hr />
+<h2 id="pasos-o-procedimientos">Pasos o Procedimientos</h2>
+<p>==¿Qué es RDP?== RDP (Remote Desktop Protocol), según la
+documentación oficial de Microsoft “se usa para la comunicación entre
+Terminal Server y el cliente de Terminal Server. RDP está encapsulado y
+cifrado dentro de TCP”.</p>
+<p>Solo funciona en TCP y su puerto es el 3389. Permite que un usuario
+se conecte a una máquina de forma remota. Lo que lo hace sumamente
+conveniente y por ello su popularidad.</p>
+<p>==¿Cómo los atacantes abusan de RDP?== <strong>Servidores
+expuestos</strong>: Muchas veces se suelen dejar servidores expuestos
+hacia Internet, quiere decir que cualquier persona podría realizar
+ataques de fuerza bruta hacia nuestro servidor, o peor aún, utilizar
+credenciales que haya obtenido previamente.</p>
+<p>Una vez adentro, utilizaran el movimiento lateral para acercarse a su
+objetivo y eventualmente lo lograrán, provocando ataques como: -
+Exfiltración de datos - Ransomware</p>
+<p>==¿Cómo encontrar RDP expuestas a Internet?== Existen dos plataformas
+para lograrlo:</p>
+<h4 id="shodan-shodan.io">SHODAN: (shodan.io)</h4>
+<p>Primero debemos crearnos una cuenta.</p>
+<p>Buscamos con el número de puerto y vemos +4M de dispositivos con RPD
+abierto: <img role="img" aria-label="Pasted image 20240918090746.png" src="Pasted image 20240918090746.png" title="wikilink" alt="Pasted image 20240918090746.png" /></p>
+<p>Pero no necesariamente se trata de RDP: <img role="img" aria-label="Pasted image 20240918091405.png" src="Pasted image 20240918091405.png" title="wikilink" alt="Pasted image 20240918091405.png" /></p>
+<p>Podemos ver la información de los dispositivos haciendo clic en la
+IP: <img role="img" aria-label="Pasted image 20240918091549.png" src="Pasted image 20240918091549.png" title="wikilink" alt="Pasted image 20240918091549.png" /> En este caso aloja mas de un
+puerto abierto.</p>
+<h4 id="censys-censys.io">Censys (censys.io)</h4>
+<p>Empezamos buscando 3389: <img role="img" aria-label="Pasted image 20240918092427.png" src="Pasted image 20240918092427.png" title="wikilink" alt="Pasted image 20240918092427.png" /></p>
+<p>Podemos filtrar la búsqueda solo al protocolo RDP en el puerto: <img role="img" aria-label="Pasted image 20240918092723.png" src="Pasted image 20240918092723.png" title="wikilink" alt="Pasted image 20240918092723.png" /></p>
+<p>La búsqueda se actualizará así: <img role="img" aria-label="Pasted image 20240918092806.png" src="Pasted image 20240918092806.png" title="wikilink" alt="Pasted image 20240918092806.png" /></p>
+<p>También podemos buscar por IP: <img role="img" aria-label="Pasted image 20240918092957.png" src="Pasted image 20240918092957.png" title="wikilink" alt="Pasted image 20240918092957.png" /></p>
+<p>==Cómo protegerse del abuso de RDP==</p>
+<ol type="1">
+<li>Seguimiento a nuestros servicios abiertos con Shodan y Censys</li>
+<li>Autenticación multifactor, no es infalible pero es un buen
+comiienzo</li>
+<li>Acceso restringido, puede ser con un firewall (rango de IP válisdo)
+o una VPN</li>
+<li>Mejores contraseñas (considerar “PAM”, que brinda contraseñas de un
+solo uso)</li>
+<li>Deshabilite cuentas por defecto, y use una cuenta de Administrador
+con un nombre diferente a “<code>Administrator</code>”.</li>
+</ol>
+<hr />
+</body>
+</html>

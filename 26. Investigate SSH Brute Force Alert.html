@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-10-01" />
+  <title>26. Investigate SSH Brute Force Alert</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">26. Investigate SSH Brute Force Alert</h1>
+<p class="date">2024-10-01</p>
+</header>
+<h1 id="investigate-ssh-brute-force-attack-day-26">Investigate SSH Brute
+Force Attack | Day 26</h1>
+<hr />
+<h2 id="resumen">Resumen</h2>
+<blockquote>
+<p>Aquí puedes escribir un breve resumen del contenido del video. Usa
+este espacio para capturar la esencia de lo que se trata el video de
+manera concisa.</p>
+</blockquote>
+<hr />
+<h2 id="investigar-una-alerta-de-fuerza-bruta-ssh">1. Investigar una
+alerta de fuerza bruta SSH</h2>
+<p>Nos dirigimos a Elastic <code>Security &gt; Alerts</code>, aquí
+veremos las alertas generadas: <img role="img" aria-label="Pasted image 20241001100844.png" src="Pasted image 20241001100844.png" title="wikilink" alt="Pasted image 20241001100844.png" /></p>
+<p>Veamos una alerta y hagamos clic en <code>View details</code>, solo
+para ver algunos detalles: <img role="img" aria-label="Pasted image 20241001102905.png" src="Pasted image 20241001102905.png" title="wikilink" alt="Pasted image 20241001102905.png" /></p>
+<blockquote>
+<p><strong>Una manera de investigar los ataques de fuerza bruta</strong>
+es empezar por los <code>Timelines</code>, aunque no profundizaremos en
+eso aquí. <img role="img" aria-label="Pasted image 20241001101351.png" src="Pasted image 20241001101351.png" title="wikilink" alt="Pasted image 20241001101351.png" /></p>
+</blockquote>
+<hr />
+<blockquote>
+<p>[!success] Investigando un ataque de Fuerza Bruta Al investigar un
+ataque de fuerza bruta debemos hacernos algunas preguntas: - ¿La IP es
+conocida por realizar ataques de fuerza bruta? - ¿Hay otros usuarios
+afectados por ésta IP? - ¿Tuvo éxito con alguno? - Si tuvo éxito, ¿Qué
+actividad ocurrió después de iniciar sesión?</p>
+</blockquote>
+<h4 id="es-esta-ip-conocida-por-realizar-ataques-de-fuerza-bruta">1.1
+¿Es esta IP conocida por realizar ataques de fuerza bruta?</h4>
+<p>Investiguemos la IP que encontramos en https://abuseipdb.com: <img role="img" aria-label="Pasted image 20241001104345.png" src="Pasted image 20241001104345.png" title="wikilink" alt="Pasted image 20241001104345.png" /> Ésta IP es conocida por
+realizar ataques de fuerza bruta SSH <img role="img" aria-label="Pasted image 20241001104542.png" src="Pasted image 20241001104542.png" title="wikilink" alt="Pasted image 20241001104542.png" /></p>
+<p>Otro recurso que nos da información importante es
+https://www.greynoise.io/: <img role="img" aria-label="Pasted image 20241001105143.png" src="Pasted image 20241001105143.png" title="wikilink" alt="Pasted image 20241001105143.png" /></p>
+<h4 id="algún-otro-usuario-ha-sido-afectado-por-esta-ip">1.2. ¿Algún
+otro usuario ha sido afectado por esta IP?</h4>
+<p>Realizamos una búsqueda rápida en Discover para saber la respuesta:
+<img role="img" aria-label="Pasted image 20241001105954.png" src="Pasted image 20241001105954.png" title="wikilink" alt="Pasted image 20241001105954.png" /> Si, 4 usuarios fueron
+investigados.</p>
+<h4 id="tuvo-éxito-en-su-ataque">1.3. ¿Tuvo éxito en su ataque?</h4>
+<p>Realizamos una búsqueda rápida en Discover para saber la respuesta:
+<img role="img" aria-label="Pasted image 20241001105653.png" src="Pasted image 20241001105653.png" title="wikilink" alt="Pasted image 20241001105653.png" /> No tuvo éxito
+(afortunadamente).</p>
+<h4 id="si-el-ataque-fue-exitoso-que-ocurrió-después">1.4. ¿Si el ataque
+fue exitoso, que ocurrió después?</h4>
+<p>El ataque no fue exitoso, no ocurrió nada.</p>
+<hr />
+<h2 id="modificar-las-reglas-de-elk-para-que-envíen-tickets-a-nuestro-sistema-osticket">2.
+Modificar las reglas de ELK para que envíen tickets a nuestro sistema
+osTicket</h2>
+<p>Nos dirigimos a Elastic
+<code>Security &gt; Rules &gt; Detection rules (SIEM)</code> <img role="img" aria-label="Pasted image 20241001111635.png" src="Pasted image 20241001111635.png" title="wikilink" alt="Pasted image 20241001111635.png" /></p>
+<p>Hacemos clic en <code>Edit rule setings</code>: <img role="img" aria-label="Pasted image 20241001111718.png" src="Pasted image 20241001111718.png" title="wikilink" alt="Pasted image 20241001111718.png" /></p>
+<p>Clic en Webhook: <img role="img" aria-label="Pasted image 20241001111835.png" src="Pasted image 20241001111835.png" title="wikilink" alt="Pasted image 20241001111835.png" /></p>
+<p>Vamos a la pestaña <code>Actions</code>. Elegimos las siguientes
+opciones y usaremos el mismo ejemplo de script xml que usamos el día 25,
+pero para simplificar quitaremos las secciones
+<code>&lt;attachments&gt;</code> y <code>&lt;ip&gt;</code>, además
+cambiaremos el valor de <code>&lt;name&gt;</code> a “Elastic”. <img role="img" aria-label="Pasted image 20241001112713.png" src="Pasted image 20241001112713.png" title="wikilink" alt="Pasted image 20241001112713.png" /></p>
+<blockquote>
+<p>Podemos enriquecer el Script con variables: <img role="img" aria-label="Pasted image 20241001113024.png" src="Pasted image 20241001113024.png" title="wikilink" alt="Pasted image 20241001113024.png" /> Así quedó: <img role="img" aria-label="Pasted image 20241001113148.png" src="Pasted image 20241001113148.png" title="wikilink" alt="Pasted image 20241001113148.png" /></p>
+</blockquote>
+<p>Por último guardamos: <img role="img" aria-label="Pasted image 20241001113555.png" src="Pasted image 20241001113555.png" title="wikilink" alt="Pasted image 20241001113555.png" /></p>
+<h4 id="inspeccionar-los-tickets-generados-por-la-regla">Inspeccionar
+los tickets generados por la regla</h4>
+<p>Después de un tiempo, conforme suceden ataques de fuerza bruta
+deberíamos recibir algunos tickets en osTicket para atender: <img role="img" aria-label="Pasted image 20241002074101.png" src="Pasted image 20241002074101.png" title="wikilink" alt="Pasted image 20241002074101.png" /></p>
+<p>La persona que abre el ticket debe asignárselo a sí mismo (así otros
+analistas no trabajaran en el): <img role="img" aria-label="Pasted image 20241002074522.png" src="Pasted image 20241002074522.png" title="wikilink" alt="Pasted image 20241002074522.png" /></p>
+<p>Cuando se hayan encontrado algunos detalles importantes se puede ir
+reportando: <img role="img" aria-label="Pasted image 20241002074828.png" src="Pasted image 20241002074828.png" title="wikilink" alt="Pasted image 20241002074828.png" /></p>
+<p>Una vez resuelto se debe cerrar el ticket: <img role="img" aria-label="Pasted image 20241002075015.png" src="Pasted image 20241002075015.png" title="wikilink" alt="Pasted image 20241002075015.png" /></p>
+<p>En la pestaña tickets se pueden ver los tickets cerrados, los tickets
+asignados a mi persona, etc…</p>
+</body>
+</html>

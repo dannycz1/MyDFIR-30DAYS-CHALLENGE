@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-09-03" />
+  <title>3. Elastic Setup</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">3. Elastic Setup</h1>
+<p class="date">2024-09-03</p>
+</header>
+<h1 id="elasticsearch-setup-tutorial-day-3">Elasticsearch Setup Tutorial
+| Day 3</h1>
+<hr />
+<h2 id="resumen">Resumen</h2>
+<blockquote>
+<p>Aprenderemos a poner en marcha nuestra propia instancia de
+Elasticsearch</p>
+</blockquote>
+<hr />
+<h2 id="conceptos-clave">Conceptos Clave</h2>
+<ul>
+<li><strong>IaaS</strong>: Infraestructura como Servicio, permite crear
+hosts, redes, firewalls, etc. en la nube</li>
+<li><strong>Elastic Search</strong></li>
+<li><strong>SSH</strong></li>
+<li><strong>Firewall</strong></li>
+</ul>
+<hr />
+<h2 id="pasos-o-procedimientos">Pasos o Procedimientos</h2>
+<h4 id="creación-de-la-vpc">Creación de la VPC</h4>
+<ol type="1">
+<li><p>Podemos seguir los pasos como en la imagen para empezar a crear
+la VPC: <img role="img" aria-label="Pasted image 20240903222523.png" src="Pasted image 20240903222523.png" title="wikilink" alt="Pasted image 20240903222523.png" /></p></li>
+<li><p>A continuación debemos seleccionar:</p>
+<ul>
+<li>Locación:
+<code>En nuestro caso elegimos Toronto - Canada</code>.</li>
+<li>IP range: <code>En nuestro caso elegimos 172.31.0.0/24</code>.</li>
+<li>Network Description: <code>MyDFIR-VPC-FlamingBl4d3</code>. <em>TOMAR
+EN CUENTA que la VPC y todas las VM deben estar en la misma locación, de
+otro modo no se podrán ver.</em> <img role="img" aria-label="Pasted image 20240910090448.png" src="Pasted image 20240910090448.png" title="wikilink" alt="Pasted image 20240910090448.png" /> . Ahora tenemos nuestro propio
+rango de IP de Nube Privada Virtual (VPC). <img role="img" aria-label="Pasted image 20240910090511.png" src="Pasted image 20240910090511.png" title="wikilink" alt="Pasted image 20240910090511.png" /></li>
+</ul></li>
+</ol>
+<hr />
+<p><strong>==Sección “Deploy New Instance”: Implementar una Instancia de
+Linux para Elasticsearch==</strong></p>
+<p>Ahora creamos nuestras máquinas virtuales, este es un proceso de
+varios pasos por lo que nos guiaremos por las imágenes: <img role="img" aria-label="Pasted image 20240903230729.png" src="Pasted image 20240903230729.png" title="wikilink" alt="Pasted image 20240903230729.png" /></p>
+<figure>
+<img role="img" aria-label="Pasted image 20240903231024.png" src="Pasted image 20240903231024.png" title="wikilink" alt="Pasted image 20240903231024.png" />
+<figcaption aria-hidden="true">Pasted image
+20240903231024.png</figcaption>
+</figure>
+<figure>
+<img role="img" aria-label="Pasted image 20240903232654.png" src="Pasted image 20240903232654.png" title="wikilink" alt="Pasted image 20240903232654.png" />
+<figcaption aria-hidden="true">Pasted image
+20240903232654.png</figcaption>
+</figure>
+<figure>
+<img role="img" aria-label="Pasted image 20240903231213.png" src="Pasted image 20240903231213.png" title="wikilink" alt="Pasted image 20240903231213.png" />
+<figcaption aria-hidden="true">Pasted image
+20240903231213.png</figcaption>
+</figure>
+<figure>
+<img role="img" aria-label="Pasted image 20240903231514.png" src="Pasted image 20240903231514.png" title="wikilink" alt="Pasted image 20240903231514.png" />
+<figcaption aria-hidden="true">Pasted image
+20240903231514.png</figcaption>
+</figure>
+<figure>
+<img role="img" aria-label="Pasted image 20240903231917.png" src="Pasted image 20240903231917.png" title="wikilink" alt="Pasted image 20240903231917.png" />
+<figcaption aria-hidden="true">Pasted image
+20240903231917.png</figcaption>
+</figure>
+<figure>
+<img role="img" aria-label="Pasted image 20240903232120.png" src="Pasted image 20240903232120.png" title="wikilink" alt="Pasted image 20240903232120.png" />
+<figcaption aria-hidden="true">Pasted image
+20240903232120.png</figcaption>
+</figure>
+<figure>
+<img role="img" aria-label="Pasted image 20240910091210.png" src="Pasted image 20240910091210.png" title="wikilink" alt="Pasted image 20240910091210.png" />
+<figcaption aria-hidden="true">Pasted image
+20240910091210.png</figcaption>
+</figure>
+<p>Y ya tenemos nuestra instancia de Ubuntu: <img role="img" aria-label="Pasted image 20240910091257.png" src="Pasted image 20240910091257.png" title="wikilink" alt="Pasted image 20240910091257.png" /></p>
+<hr />
+<p><strong>==Acceder a la instancia vía SSH==</strong></p>
+<figure>
+<img role="img" aria-label="Pasted image 20240903233857.png" src="Pasted image 20240903233857.png" title="wikilink" alt="Pasted image 20240903233857.png" />
+<figcaption aria-hidden="true">Pasted image
+20240903233857.png</figcaption>
+</figure>
+<p>Abrimos un PowerShell para interactuar: <img role="img" aria-label="Pasted image 20240903234645.png" src="Pasted image 20240903234645.png" title="wikilink" alt="Pasted image 20240903234645.png" /></p>
+<p>Actualizamos todos los repositorios y los paquetes <img role="img" aria-label="Pasted image 20240903234921.png" src="Pasted image 20240903234921.png" title="wikilink" alt="Pasted image 20240903234921.png" /></p>
+<hr />
+<p><strong>==Instalación de Elasticsearch y Archivo de
+configuración==</strong></p>
+<p>Copiamos el enlace de descarga de Elasticsearch: <img role="img" aria-label="Pasted image 20240903235716.png" src="Pasted image 20240903235716.png" title="wikilink" alt="Pasted image 20240903235716.png" /></p>
+<p>Descargamos en la instancia usando <code>wget</code> y el enlace
+obtenido: <img role="img" aria-label="Pasted image 20240910092020.png" src="Pasted image 20240910092020.png" title="wikilink" alt="Pasted image 20240910092020.png" /></p>
+<p>Instalamos Elasticsearch <img role="img" aria-label="Pasted image 20240904000032.png" src="Pasted image 20240904000032.png" title="wikilink" alt="Pasted image 20240904000032.png" /></p>
+<p>Debemos guardar todos los datos importantes que se nos presenta
+inmediatamente después de la instalación: <img role="img" aria-label="Pasted image 20240910092355.png" src="Pasted image 20240910092355.png" title="wikilink" alt="Pasted image 20240910092355.png" /></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">---------------------------</span> Security autoconfiguration information <span class="at">------------------------------</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Authentication</span> and authorization are enabled.</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">TLS</span> for the transport and HTTP layers is enabled and configured.</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">The</span> generated password for the elastic built-in superuser is : ZocD_AkpeOVCEyEGi98P</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">If</span> this node should join an existing cluster, you can reconfigure this with</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;/usr/share/elasticsearch/bin/elasticsearch-reconfigure-node --enrollment-token &lt;token-here&gt;&#39;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">after</span> creating an enrollment token on your existing cluster.</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">You</span> can complete the following actions at any time:</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="ex">Reset</span> the password of the elastic built-in superuser with</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;/usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic&#39;</span><span class="ex">.</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="ex">Generate</span> an enrollment token for Kibana instances with</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a> <span class="st">&#39;/usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana&#39;</span><span class="ex">.</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="ex">Generate</span> an enrollment token for Elasticsearch nodes with</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="st">&#39;/usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s node&#39;</span><span class="ex">.</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="ex">-------------------------------------------------------------------------------------------------</span></span></code></pre></div>
+<p><strong>==Archivo de configuración
+<code>elasticsearch.yml</code>==</strong></p>
+<figure>
+<img role="img" aria-label="Pasted image 20240904174731.png" src="Pasted image 20240904174731.png" title="wikilink" alt="Pasted image 20240904174731.png" />
+<figcaption aria-hidden="true">Pasted image
+20240904174731.png</figcaption>
+</figure>
+<p>Para poder acceder a Elasticsearch vía web, necesitamos habilitar las
+líneas <code>http.port</code> y <code>network.host</code> (con la IP
+correspondiente, en este casó la IP pública): <img role="img" aria-label="Pasted image 20240904175243.png" src="Pasted image 20240904175243.png" title="wikilink" alt="Pasted image 20240904175243.png" /></p>
+<p>==Aseguramos la VM (Kibana)==</p>
+<p>Para evitar que cualquiera pueda acceder a nuestra máquina desde
+internet, hacemos lo siguiente: <img role="img" aria-label="Pasted image 20240904175654.png" src="Pasted image 20240904175654.png" title="wikilink" alt="Pasted image 20240904175654.png" /></p>
+<figure>
+<img role="img" aria-label="Pasted image 20240904175818.png" src="Pasted image 20240904175818.png" title="wikilink" alt="Pasted image 20240904175818.png" />
+<figcaption aria-hidden="true">Pasted image
+20240904175818.png</figcaption>
+</figure>
+<figure>
+<img role="img" aria-label="Pasted image 20240904175924.png" src="Pasted image 20240904175924.png" title="wikilink" alt="Pasted image 20240904175924.png" />
+<figcaption aria-hidden="true">Pasted image
+20240904175924.png</figcaption>
+</figure>
+<p>Una vez creado el grupo, en la nueva sección debemos configurar el
+protocolo SSH para que no acepte conexiones desde cualquier sitio
+(<code>anywhere</code>). Debemos dejar el campo “Source” con el valor
+“<code>MyIP</code>”: <img role="img" aria-label="Pasted image 20240904211428.png" src="Pasted image 20240904211428.png" title="wikilink" alt="Pasted image 20240904211428.png" /></p>
+<p>Ahora recordemos que aun no hemos aplicado el nuevo firewall a
+nuestra VM, por lo que volvemos a la VM, navegamos hasta la sección
+firewall (compute&gt;[kibanaVM]&gt;settings&gt;firewall) y aplicamos el
+cambio: <img role="img" aria-label="Pasted image 20240904181204.png" src="Pasted image 20240904181204.png" title="wikilink" alt="Pasted image 20240904181204.png" /></p>
+<figure>
+<img role="img" aria-label="Pasted image 20240904181227.png" src="Pasted image 20240904181227.png" title="wikilink" alt="Pasted image 20240904181227.png" />
+<figcaption aria-hidden="true">Pasted image
+20240904181227.png</figcaption>
+</figure>
+<p>==Iniciamos el servicio de Elasticsearch==</p>
+<figure>
+<img role="img" aria-label="Pasted image 20240904182002.png" src="Pasted image 20240904182002.png" title="wikilink" alt="Pasted image 20240904182002.png" />
+<figcaption aria-hidden="true">Pasted image
+20240904182002.png</figcaption>
+</figure>
+<p>Y estamos listos para acceder http://155.138.135.179:5601/</p>
+</body>
+</html>

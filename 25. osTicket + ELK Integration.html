@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-09-30" />
+  <title>25. osTicket + ELK Integration</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">25. osTicket + ELK Integration</h1>
+<p class="date">2024-09-30</p>
+</header>
+<h1 id="osticket-elk-integration-day-25">osTicket + ELK Integration |
+Day 25</h1>
+<hr />
+<h2 id="resumen">Resumen</h2>
+<blockquote>
+<p>Integraremos osTicket con nuestro ELK, y lo probaremos enviando un
+test al sistema de tickets. Este sistema permite que se envíen tickets
+automaticamente cuando se generen alertas en ELK. Con esto estaremos
+cumpliendo la primera A de AAA (Accounting)</p>
+</blockquote>
+<table style="width:6%;">
+<colgroup>
+<col style="width: 5%" />
+</colgroup>
+<tbody>
+<tr>
+<td>## Conceptos Clave - API - Conector - HTTP Request</td>
+</tr>
+</tbody>
+</table>
+<p>Accedemos a la plataforma de administración de osTicket:
+http://155.138.138.27/osticket/upload/scp/admin.php y en la página
+principal: <img role="img" aria-label="Pasted image 20240930234932.png" src="Pasted image 20240930234932.png" title="wikilink" alt="Pasted image 20240930234932.png" /></p>
+<p>Seguimos la secuencia: <img role="img" aria-label="Pasted image 20240930235050.png" src="Pasted image 20240930235050.png" title="wikilink" alt="Pasted image 20240930235050.png" /></p>
+<p>Rellenamos los datos: <img role="img" aria-label="Pasted image 20240930235447.png" src="Pasted image 20240930235447.png" title="wikilink" alt="Pasted image 20240930235447.png" /></p>
+<p>Guardamos la API KEY: AD8C98813539A070309526F48646B178 <img role="img" aria-label="Pasted image 20240930235546.png" src="Pasted image 20240930235546.png" title="wikilink" alt="Pasted image 20240930235546.png" /></p>
+<p>==Añadir la API KEY en Elastic== Iniciamos sesión en Elastic y nos
+dirigimos a…
+<code>Management &gt; Stack Management &gt; Alerts and Insights &gt; Connectors</code>:
+<img role="img" aria-label="Pasted image 20240930235934.png" src="Pasted image 20240930235934.png" title="wikilink" alt="Pasted image 20240930235934.png" /></p>
+<blockquote>
+<p>[!note] VULTR VULTR nos pide tener licencia para utilizar la mayoría
+de los conectores, así que debemos activar dicha licencia para
+continuar: <img role="img" aria-label="Pasted image 20241001000316.png" src="Pasted image 20241001000316.png" title="wikilink" alt="Pasted image 20241001000316.png" /> <img role="img" aria-label="Pasted image 20241001000416.png" src="Pasted image 20241001000416.png" title="wikilink" alt="Pasted image 20241001000416.png" /> Y eso sería todo en ésta parte:
+<img role="img" aria-label="Pasted image 20241001000509.png" src="Pasted image 20241001000509.png" title="wikilink" alt="Pasted image 20241001000509.png" /></p>
+</blockquote>
+<p>Continuamos y elegimos <code>Webhook</code>: <img role="img" aria-label="Pasted image 20241001000836.png" src="Pasted image 20241001000836.png" title="wikilink" alt="Pasted image 20241001000836.png" /></p>
+<p>Rellenamos los campos: <img role="img" aria-label="Pasted image 20241001001950.png" src="Pasted image 20241001001950.png" title="wikilink" alt="Pasted image 20241001001950.png" /></p>
+<p>Copiamos este Script (XML payload example) del repositorio de
+osTicket:
+https://github.com/osTicket/osTicket/blob/develop/setup/doc/api/tickets.md</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span><span class="ot"> version=</span><span class="st">&quot;1.0&quot;</span><span class="ot"> encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">ticket</span><span class="ot"> alert=</span><span class="st">&quot;true&quot;</span><span class="ot"> autorespond=</span><span class="st">&quot;true&quot;</span><span class="ot"> source=</span><span class="st">&quot;API&quot;</span>&gt;</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">name</span>&gt;Angry User&lt;/<span class="kw">name</span>&gt;</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">email</span>&gt;api@osticket.com&lt;/<span class="kw">email</span>&gt;</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">subject</span>&gt;Testing API&lt;/<span class="kw">subject</span>&gt;</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">phone</span>&gt;318-555-8634X123&lt;/<span class="kw">phone</span>&gt;</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">message</span><span class="ot"> type=</span><span class="st">&quot;text/plain&quot;</span>&gt;<span class="bn">&lt;![CDATA[</span>Message content here<span class="bn">]]&gt;</span>&lt;/<span class="kw">message</span>&gt;</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">attachments</span>&gt;</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">file</span><span class="ot"> name=</span><span class="st">&quot;file.txt&quot;</span><span class="ot"> type=</span><span class="st">&quot;text/plain&quot;</span>&gt;<span class="bn">&lt;![CDATA[</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>            File content is here and is automatically trimmed</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="bn">]]&gt;</span>&lt;/<span class="kw">file</span>&gt;</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">file</span><span class="ot"> name=</span><span class="st">&quot;image.gif&quot;</span><span class="ot"> type=</span><span class="st">&quot;image/gif&quot;</span><span class="ot"> encoding=</span><span class="st">&quot;base64&quot;</span>&gt;</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>            R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAwAAAC8IyPqcvt3wCcDkiLc7C0qwy</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>            GHhSWpjQu5yqmCYsapyuvUUlvONmOZtfzgFzByTB10QgxOR0TqBQejhRNzOfkVJ</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>            +5YiUqrXF5Y5lKh/DeuNcP5yLWGsEbtLiOSpa/TPg7JpJHxyendzWTBfX0cxOnK</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>            PjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJlZeGl9i2icVqaNVailT6F5iJ90m6</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>            mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uisF81M1OIcR7lEewwcLp7tuNNkM3u</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>            Nna3F2JQFo97Vriy/Xl4/f1cf5VWzXyym7PHhhx4dbgYKAAA7</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        &lt;/<span class="kw">file</span>&gt;</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">attachments</span>&gt;</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">ip</span>&gt;123.211.233.122&lt;/<span class="kw">ip</span>&gt;</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">ticket</span>&gt;</span></code></pre></div>
+<p>Y usamos para probar la conexión: <img role="img" aria-label="Pasted image 20241001082522.png" src="Pasted image 20241001082522.png" title="wikilink" alt="Pasted image 20241001082522.png" /></p>
+<p>Vemos el ticket en el sistema: <img role="img" aria-label="Pasted image 20241001083030.png" src="Pasted image 20241001083030.png" title="wikilink" alt="Pasted image 20241001083030.png" /></p>
+</body>
+</html>

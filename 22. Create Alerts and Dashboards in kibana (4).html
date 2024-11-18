@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-09-27" />
+  <title>22. Create Alerts and Dashboards in kibana (4)</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">22. Create Alerts and Dashboards in kibana (4)</h1>
+<p class="date">2024-09-27</p>
+</header>
+<h1 id="how-to-create-alerts-and-dashboards-in-kibana-day-22-44">How To
+Create Alerts and Dashboards in Kibana | Day 22 (4/4)</h1>
+<hr />
+<h2 id="resumen">Resumen</h2>
+<blockquote>
+<p>Lo que haremos aquí será crear una alerta en Kibana contra los
+ataques C2 de Mythic.</p>
+</blockquote>
+<h2 id="crear-la-consulta">1. Crear la consulta</h2>
+<p>Lo primero es crear la consulta KQL, en el video va descubriendo
+todos los campos que necesita a medida que investiga
+<code>svchost-FlamingBl4d3.exe</code>, pero aquí sería muy tedioso
+registrar ese proceso por lo que se resumirá bastante.</p>
+<blockquote>
+<p>[!abstract] ¿porqué hacemos ésta búsqueda? En primera instancia
+siempre hacemos una búsqueda para encontrar toda la actividad
+relacionada con un posible ataque. Por lo que ésta fase es
+investigativa.</p>
+</blockquote>
+<h4 id="investigación-en-kibana">1.1 Investigación en Kibana</h4>
+<p>Aquí haremos un poco de trampa pues ya sabemos que el malware se
+llama <code>svchost-FlamingBl4d3.exe</code>, entonces empezamos
+investigando sus registros.</p>
+<p>Si lo buscamos con la herramienta Discover, descubriremos los
+siguientes datos: - Tiene el <code>event code: 11</code> - Se descargó
+en el directorio descargas púbicas. - El usuario iniciador fue
+Administrator - La imagen es PowerShell <img role="img" aria-label="Pasted image 20240928121259.png" src="Pasted image 20240928121259.png" title="wikilink" alt="Pasted image 20240928121259.png" /></p>
+<p>Ahora quiero encontrar el <code>event code 1</code> ya que éste tiene
+el proceso de creación completo y tiene también el hash que es muy
+importante en la investigación. <img role="img" aria-label="Pasted image 20240928121630.png" src="Pasted image 20240928121630.png" title="wikilink" alt="Pasted image 20240928121630.png" /></p>
+<blockquote>
+<p>Podemos copiar el hash y buscarlo en la base de datos de Virus Total
+para ver si coincide con algún malware conocido.</p>
+</blockquote>
+<p>Ademas hemos encontrado los siguientes campos importantes: -
+winlog.event_data.OriginalFileName = Apollo.exe</p>
+<p>Al final, despues de escudriñar los datos la consulta queda así:
+<code>kibana KQL event.code: 1 and (winlog.event_data.Hashes: *01166418C9513EB528ED6D62CAF0F9B37EC0EE39028796E726E2B5AB0419143* or winlog.event_data.OriginalFileName: Apollo.exe)</code></p>
+<p>Guardamos ésta búsqueda: <img role="img" aria-label="Pasted image 20240928123909.png" src="Pasted image 20240928123909.png" title="wikilink" alt="Pasted image 20240928123909.png" /></p>
+<h2 id="crear-la-reglaalerta">2 Crear la Regla/Alerta</h2>
+<p><code>Security &gt; Rules &gt; Detection rules &gt; Create New Rule</code>:</p>
+<p>==Paso 1:== <img role="img" aria-label="Pasted image 20240928130424.png" src="Pasted image 20240928130424.png" title="wikilink" alt="Pasted image 20240928130424.png" /></p>
+<figure>
+<img role="img" aria-label="Pasted image 20240928130545.png" src="Pasted image 20240928130545.png" title="wikilink" alt="Pasted image 20240928130545.png" />
+<figcaption aria-hidden="true">Pasted image
+20240928130545.png</figcaption>
+</figure>
+<p>Campos que nos interesan para saber mas de un vistazo: -
+host.hostname - message - winlog.event_data.CommandLine -
+winlog.event_data.Image - winlog.event_data.ParentCommandLine -
+winlog.event_data.ParentImage - winlog.event_data.ProcessGuid -
+winlog.event_data.User - winlog.event_data.CurrentDirectory <img role="img" aria-label="Pasted image 20240928131108.png" src="Pasted image 20240928131108.png" title="wikilink" alt="Pasted image 20240928131108.png" /></p>
+<p>==Paso 2:== <img role="img" aria-label="Pasted image 20240928131316.png" src="Pasted image 20240928131316.png" title="wikilink" alt="Pasted image 20240928131316.png" /></p>
+<p>==Paso 3:== <img role="img" aria-label="Pasted image 20240928131413.png" src="Pasted image 20240928131413.png" title="wikilink" alt="Pasted image 20240928131413.png" /></p>
+<p>==Paso 4:== Nada, solo <code>Create &amp; enable rule</code>.</p>
+<h2 id="crear-dashboard">3. Crear Dashboard</h2>
+<p>Éste Dashborad contendrá 3 visualizaciones y cada visualización
+requiere una consulta KQL.</p>
+<p>==Elaboración de las consultas==</p>
+<p>Primeramente crearemos una consulta KQL con los siguientes criterios:
+- ID de evento 1 de sysmon - Creación de Procesos (en nuestro caso a
+través de powershell, cmd, rundll32, debemos especificar que el
+event.provider sea de sysmon, pues sino buscará en otros proveedores de
+eventos y fallará) - ID de evento 3 de sysmon - Conexiones de Red.
+(cualquier evento que inicie una conexión saliente) - ID de evento 5001
+de sysmon: - Windows Defender fué desactivado</p>
+<p>En el formato KQL serían así: -
+<code>event.code: 1 and event.provider: Microsoft-Windows-Sysmon and (powershell or cmd or rundll32)</code>
+-
+<code>event.code: 3 and event.provider: Microsoft-Windows-Sysmon and winlog.event_data.Initiated: true</code>
+-
+<code>event.code: 5001 and event.provider: Microsoft-Windows-Windows Defender</code></p>
+<h4 id="crear-la-primer-visualización-event-code-id-1">3.1 Crear la
+primer visualización (Event code ID 1)</h4>
+<p><code>Security &gt; Dashboards &gt; Create Dashboard</code> &gt;
+<code>Create visualization</code>: <img role="img" aria-label="Pasted image 20240928165737.png" src="Pasted image 20240928165737.png" title="wikilink" alt="Pasted image 20240928165737.png" /></p>
+<p>Introducimos la búsqueda del ID de evento 1 y añadimos los mismos
+campos que vimos en la sección #2 de ésta nota): <img role="img" aria-label="Pasted image 20240928172456.png" src="Pasted image 20240928172456.png" title="wikilink" alt="Pasted image 20240928172456.png" /></p>
+<p>Quitemos ese feo encabezado que dice “Top 3 values of…” y
+modifiquemos los campos de la siguiente manera: <img role="img" aria-label="Pasted image 20240928173045.png" src="Pasted image 20240928173045.png" title="wikilink" alt="Pasted image 20240928173045.png" /></p>
+<p>Así se ve la tabla al final: <img role="img" aria-label="Pasted image 20240928173854.png" src="Pasted image 20240928173854.png" title="wikilink" alt="Pasted image 20240928173854.png" /></p>
+<p>Por último damos clic en <code>Save and return</code>.</p>
+<h4 id="crear-la-segunda-visualización-event-code-id-3">3.2 Crear la
+segunda visualización (Event code ID 3)</h4>
+<p>Seguimos el mismo procedimiento que en el paso anterior, con la única
+diferencia de que aquí elegimos algunos campos sobre la marcha, no los
+teníamos identificados previamente. <img role="img" aria-label="Pasted image 20240928182648.png" src="Pasted image 20240928182648.png" title="wikilink" alt="Pasted image 20240928182648.png" /></p>
+<p>Sin embargo en entornos ruidosos de producción podremos ver algunos
+falsos positivos, como por ejemplo el de la imagen: <img role="img" aria-label="Pasted image 20240928184056.png" src="Pasted image 20240928184056.png" title="wikilink" alt="Pasted image 20240928184056.png" /></p>
+<p>Por lo tanto corregimos eso modificando la consulta (<em>El proceso
+<strong>MsMpEng.exe</strong> se refiere a <strong>Microsoft Malware
+Protection Engine</strong>, que es parte del software de seguridad de
+Windows Defender. Éste evento significa que está documentando una
+acción; podría ser algo relacionado con la ejecución del proceso, un
+escaneo o una actualización del motor de protección</em>): <img role="img" aria-label="Pasted image 20240928184741.png" src="Pasted image 20240928184741.png" title="wikilink" alt="Pasted image 20240928184741.png" /></p>
+<blockquote>
+<p>[!success] Nota Es común corregir las consultas cuando vemos falsos
+positivos.</p>
+</blockquote>
+<h4 id="crear-la-tercera-visualización-event-code-id-5001">3.3 Crear la
+tercera visualización (Event code ID 5001)</h4>
+<p>Seguimos el mismo procedimiento que en el paso anterior, con la única
+diferencia de que aquí elegimos algunos campos sobre la marcha, no los
+teníamos identificados previamente: <img role="img" aria-label="Pasted image 20240928190714.png" src="Pasted image 20240928190714.png" title="wikilink" alt="Pasted image 20240928190714.png" /></p>
+<p>3.4 Ordenamos</p>
+<p>==Ponemos títulos a las visualizaciones== <img role="img" aria-label="Pasted image 20240928191530.png" src="Pasted image 20240928191530.png" title="wikilink" alt="Pasted image 20240928191530.png" /></p>
+<p>==Guardamos y ponemos título al dashboard== <img role="img" aria-label="Pasted image 20240928191659.png" src="Pasted image 20240928191659.png" title="wikilink" alt="Pasted image 20240928191659.png" /></p>
+<hr />
+<h2 id="conclusión">Conclusión:</h2>
+<ul>
+<li>Ahora hemos creado un nuevo dashboard para las actividades C2 de
+Mythic.</li>
+<li>También tenemos ya 3 alertas configuradas: Fuerza bruta SSH, Fuerza
+Bruta RDP y Mythic C2. <img role="img" aria-label="Pasted image 20240928192141.png" src="Pasted image 20240928192141.png" title="wikilink" alt="Pasted image 20240928192141.png" /></li>
+</ul>
+</body>
+</html>

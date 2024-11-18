@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-09-17" />
+  <title>14. Create Alerts and Dashboards in Kibana (1)</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">14. Create Alerts and Dashboards in Kibana (1)</h1>
+<p class="date">2024-09-17</p>
+</header>
+<h1 id="how-to-create-alerts-and-dashboards-in-kibana-day-14-14">How To
+Create Alerts and Dashboards in Kibana | Day 14 (1/4)</h1>
+<hr />
+<h2 id="resumen">Resumen</h2>
+<blockquote>
+<p>Aquí se mostrará como crear nuestra propia alerta contra ataques de
+Fuerza Bruta al servidor SSH y un Panel de Alertas para visualizar de
+dónde provienen esos ataques. Y recibiremos alertas la próxima vez que
+ocurra una actividad de Fuerza Bruta.</p>
+</blockquote>
+<hr />
+<h2 id="pasos-o-procedimientos">Pasos o Procedimientos</h2>
+<p>Todo lo que haremos aquí será en la aplicación Discover de Elastic,
+por lo que podemos abrirla para empezar a trabajar. <img role="img" aria-label="Pasted image 20240917162926.png" src="Pasted image 20240917162926.png" title="wikilink" alt="Pasted image 20240917162926.png" /></p>
+<h5 id="filtrar-por-el-nombre-del-host-de-nuestro-interés">1. Filtrar
+por el nombre del host de nuestro interés</h5>
+<p>Como la alerta será para el servidor SSH, entonces empezaremos
+filtrando todas las alertas de ese host, para ello, el campo
+<code>agent.name</code> parece apropiado: <img role="img" aria-label="Pasted image 20240917163620.png" src="Pasted image 20240917163620.png" title="wikilink" alt="Pasted image 20240917163620.png" /></p>
+<p>Resultado <img role="img" aria-label="Pasted image 20240917163800.png" src="Pasted image 20240917163800.png" title="wikilink" alt="Pasted image 20240917163800.png" /></p>
+<h5 id="filtrar-fuerza-bruta-autenticaciones-fallidas">2. Filtrar Fuerza
+Bruta: Autenticaciones Fallidas</h5>
+<p>Cuando buscamos Fuerza bruta, las autenticaciones fallidas son un
+factor que si o si debemos considerar pues nos indicará con mucha
+certeza si nos están atacando.</p>
+<p>Ahora bien , en este apartado, queremos obtener los siguientes datos
+en el panel: - Intentos fallidos de autenticación SSH - usuario - IP de
+origen - País de origen</p>
+<p>==Intentos fallidos== Después de buscar algunas alternativas, este
+campo parece apropiado para mostrar los intentos de conexión SSH
+fallidos: <img role="img" aria-label="Pasted image 20240917171325.png" src="Pasted image 20240917171325.png" title="wikilink" alt="Pasted image 20240917171325.png" /></p>
+<p>Pero no vemos nada, esto debido a que el evento mostrado no contiene
+nada en ese campo. <img role="img" aria-label="Pasted image 20240917171453.png" src="Pasted image 20240917171453.png" title="wikilink" alt="Pasted image 20240917171453.png" /></p>
+<p>Como nos interesan los eventos que contengan algo en dicho campo,
+ajustemos esto añadiendo un filtro “KQL” manualmente:
+<code>system.auth.ssh.event: *</code> Esto indica que se debe mostrar
+únicamente los eventos donde el campo <code>system.auth.ssh.event</code>
+contenga algún dato: <img role="img" aria-label="Pasted image 20240917173331.png" src="Pasted image 20240917173331.png" title="wikilink" alt="Pasted image 20240917173331.png" /></p>
+<p>Por último, apliquemos un filtro para ver solo los intentos fallidos
+y no así los otros tipos como éxito, error, inválido, etc. <img role="img" aria-label="Pasted image 20240917200711.png" src="Pasted image 20240917200711.png" title="wikilink" alt="Pasted image 20240917200711.png" /></p>
+<p>Reducirá bastante los eventos: <img role="img" aria-label="Pasted image 20240917200826.png" src="Pasted image 20240917200826.png" title="wikilink" alt="Pasted image 20240917200826.png" /></p>
+<p>==Usuario== Ahora, en cada evento de ataque de fuerza bruta, queremos
+saber el username que el atacante usó.</p>
+<p>Si vamos mas abajo en la lista veremos algunos campos interesantes,
+pero si expandimos <code>user.name</code> veremos que es el indicado:
+<img role="img" aria-label="Pasted image 20240917194240.png" src="Pasted image 20240917194240.png" title="wikilink" alt="Pasted image 20240917194240.png" /></p>
+<p>Añadimos el campo como una columna: <img role="img" aria-label="Pasted image 20240917194416.png" src="Pasted image 20240917194416.png" title="wikilink" alt="Pasted image 20240917194416.png" /></p>
+<p>==IP de Origen== Busquemos entonces la manera de añadir la IP de
+origen al panel.</p>
+<p>Un campo que parece apropiado es <code>source.ip</code>: <img role="img" aria-label="Pasted image 20240917195245.png" src="Pasted image 20240917195245.png" title="wikilink" alt="Pasted image 20240917195245.png" /></p>
+<p>Lo añadimos <img role="img" aria-label="Pasted image 20240917195355.png" src="Pasted image 20240917195355.png" title="wikilink" alt="Pasted image 20240917195355.png" /></p>
+<p>==Nombre del país== Solo por diversión también podemos añadir el
+nombre del país: <img role="img" aria-label="Pasted image 20240917195629.png" src="Pasted image 20240917195629.png" title="wikilink" alt="Pasted image 20240917195629.png" /></p>
+<p>Por último guardamos: <img role="img" aria-label="Pasted image 20240917201605.png" src="Pasted image 20240917201605.png" title="wikilink" alt="Pasted image 20240917201605.png" /></p>
+<h5 id="crear-alerta">3. Crear Alerta</h5>
+<p>Creamos una alerta: <img role="img" aria-label="Pasted image 20240917201739.png" src="Pasted image 20240917201739.png" title="wikilink" alt="Pasted image 20240917201739.png" /></p>
+<p>Ponemos el nombra a la alerta: <img role="img" aria-label="Pasted image 20240917202233.png" src="Pasted image 20240917202233.png" title="wikilink" alt="Pasted image 20240917202233.png" /></p>
+<p>Si estoy con la búsqueda configurada cuando doy clic en “crear
+alerta”, la mayoría de los datos se llenarán automáticamente: <img role="img" aria-label="Pasted image 20240917202554.png" src="Pasted image 20240917202554.png" title="wikilink" alt="Pasted image 20240917202554.png" /></p>
+<p>Seleccionamos los datos de umbral: <img role="img" aria-label="Pasted image 20240917202902.png" src="Pasted image 20240917202902.png" title="wikilink" alt="Pasted image 20240917202902.png" /></p>
+<h6 id="crear-un-panel-de-visualización-para-ver-de-dónde-vienen-los-ataques">4.
+Crear un panel de visualización para ver de dónde vienen los
+ataques</h6>
+<p>Antes que nada copiemos nuestra consulta KQL (la usaremos en el
+siguiente paso): <img role="img" aria-label="Pasted image 20240917203436.png" src="Pasted image 20240917203436.png" title="wikilink" alt="Pasted image 20240917203436.png" /></p>
+<p>Ahora debemos escribir en una sola línea todas las consultas y
+filtros usados: <img role="img" aria-label="Pasted image 20240917203840.png" src="Pasted image 20240917203840.png" title="wikilink" alt="Pasted image 20240917203840.png" />
+<code>system.auth.ssh.event: * and agent.name: MyDFIR-Linux-FlamingBl4d3 and system.auth.ssh.event: Failed</code></p>
+<p>Ahora vayamos a mapas y peguemos la consulta: <img role="img" aria-label="Pasted image 20240917204236.png" src="Pasted image 20240917204236.png" title="wikilink" alt="Pasted image 20240917204236.png" /></p>
+<figure>
+<img role="img" aria-label="Pasted image 20240917204344.png" src="Pasted image 20240917204344.png" title="wikilink" alt="Pasted image 20240917204344.png" />
+<figcaption aria-hidden="true">Pasted image
+20240917204344.png</figcaption>
+</figure>
+<p>Aún no vemos nada, vamos a corregir eso, añadimos una capa llamada
+<code>Choropleth</code>: <img role="img" aria-label="Pasted image 20240917204714.png" src="Pasted image 20240917204714.png" title="wikilink" alt="Pasted image 20240917204714.png" /></p>
+<p>Seleccionamos <code>World Countries</code>, <code>ISO 3166</code>,
+etc.: <img role="img" aria-label="Pasted image 20240917210415.png" src="Pasted image 20240917210415.png" title="wikilink" alt="Pasted image 20240917210415.png" /></p>
+<p>Se abre otro panel pero no tocamos nada y damos en guardad: <img role="img" aria-label="Pasted image 20240917210722.png" src="Pasted image 20240917210722.png" title="wikilink" alt="Pasted image 20240917210722.png" /></p>
+<p>Ponemos el nombre y seleccionamos “nuevo” <img role="img" aria-label="Pasted image 20240917210832.png" src="Pasted image 20240917210832.png" title="wikilink" alt="Pasted image 20240917210832.png" /></p>
+<p>Y una vez mas “guardar”: <img role="img" aria-label="Pasted image 20240917211147.png" src="Pasted image 20240917211147.png" title="wikilink" alt="Pasted image 20240917211147.png" /> <img role="img" aria-label="Pasted image 20240917211250.png" src="Pasted image 20240917211250.png" title="wikilink" alt="Pasted image 20240917211250.png" /></p>
+<h5 id="opcional-crear-un-panel-similar-al-mapa-anterior-pero-con-los-login-acepted">5.
+Opcional: Crear un panel similar al mapa anterior pero con los
+<code>login Acepted</code></h5>
+<p>Duplicamos el mapa original: <img role="img" aria-label="Pasted image 20240917211529.png" src="Pasted image 20240917211529.png" title="wikilink" alt="Pasted image 20240917211529.png" /></p>
+<p>Damos en editar: <img role="img" aria-label="Pasted image 20240917211648.png" src="Pasted image 20240917211648.png" title="wikilink" alt="Pasted image 20240917211648.png" /></p>
+<p>Editamos la consulta KQL: <img role="img" aria-label="Pasted image 20240917211952.png" src="Pasted image 20240917211952.png" title="wikilink" alt="Pasted image 20240917211952.png" /></p>
+<p>Actualizamos la consulta y vemos que tenemos un inicio de sesión
+exitoso! <img role="img" aria-label="Pasted image 20240917212208.png" src="Pasted image 20240917212208.png" title="wikilink" alt="Pasted image 20240917212208.png" /></p>
+<p>Por último damos en <code>Save and return</code></p>
+<p>Y vemos nuestros flamantes paneles: <img role="img" aria-label="Pasted image 20240917212424.png" src="Pasted image 20240917212424.png" title="wikilink" alt="Pasted image 20240917212424.png" /></p>
+<p>Ahora recibirá una alerta cuando ocurran actividades de fuerza
+bruta!</p>
+<hr />
+</body>
+</html>

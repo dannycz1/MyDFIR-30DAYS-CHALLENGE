@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-09-09" />
+  <title>8. What is Sysmon</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">8. What is Sysmon</h1>
+<p class="date">2024-09-09</p>
+</header>
+<h1 id="what-is-sysmon-day-8">What is Sysmon? | Day 8</h1>
+<hr />
+<h2 id="resumen">Resumen</h2>
+<blockquote>
+<p>Aquí se explicará que es Sysmon y para qué nos sirve</p>
+</blockquote>
+<hr />
+<h2 id="conceptos-clave">Conceptos Clave</h2>
+<ul>
+<li><strong>Sysmon Events</strong>: Existen 30 diferentes tipos de
+Eventos Sysmon.</li>
+<li><strong>Process GUID</strong>: Es un identificador único que Sysmon
+genera para cada proceso que se inicia en el sistema, se utiliza para
+hacer un seguimiento preciso de los procesos durante su ciclo de
+vida.</li>
+<li><strong>Correlación entre Eventos con Process GUID</strong>: Sysmon
+registra eventos relacionados con el proceso (como creación de hilos,
+acceso a redes, creación de archivos, etc.) y usa el <strong>Process
+GUID</strong> para correlacionar todos estos eventos, lo que facilita
+entender el comportamiento del proceso en el tiempo.</li>
+</ul>
+<hr />
+<h2 id="pasos-o-procedimientos">Pasos o Procedimientos</h2>
+<h4 id="qué-es-sysmon">¿Qué es Sysmon?</h4>
+<p>Es una herramienta gratuita de Microsoft que forma parte de la suite
+interna de Sys. Sysmon proporciona mucha telemetría que ayuda a detectar
+actividades peligrosas, entre algunos eventos que puede monitorear
+están: - Creación de procesos (junto con la línea de comandos usados) -
+Conexiones de red - Creación de Archivos - etc.</p>
+<p>En realidad Sysmon tiene 30 diferentes tipos de eventos. Sysmon se
+configura mediante un solo archivos de configuración (aunque es
+opcional).</p>
+<p><strong>Process GUID (Global Unique Identifier)</strong>: Ésta
+funcionalidad se usa para correlacionar eventos (muy útil para entender
+el panorama completo de una amenaza)</p>
+<p><strong>Captura de conexiones de Red</strong>: Incluye las IP de
+origen y de destino juntos con sus puertos y el proceso que estuvo
+involucrado en realizar la conexión.</p>
+<p>Ejemplo: Imagine que vio un proceso de C2 establecer una conexión
+saliente hacia una IP externa usando un puerto no estándar, podría
+incluso ver que proceso fue responsable de realizar esta conexión y
+luego correlacionar los eventos usando el proceso GUID. Prácticamente
+tenemos el rastro completo de la amenaza.</p>
+<h4 id="sysmon-events-los-mas-importantes-de-ellos">Sysmon Events (los
+mas importantes de ellos)</h4>
+<hr />
+<p><strong>Event ID 1: Process Creation</strong> “Este evento rastreará
+cualquier proceso nuevo junto con su línea de comando en un endpoint”,
+si un atacante ejecuta un malware, veremos el evento de creación. Además
+con el Hash podemos investigar con OSINT para encontrar mas información.
+&gt;<img role="img" aria-label="Pasted image 20240909091554.png" src="Pasted image 20240909091554.png" title="wikilink" alt="Pasted image 20240909091554.png" /></p>
+<p><strong>Event ID 3: Conexiones de Red</strong> Este evento no está
+habilitado por defecto pero es altamente recomendable hacerlo, obtiene
+las IP de origen y destino junto con el puerto, por lo que si encuentro
+un binario extraño ejecutándose (Sysmon ID 1), puedo investigar también
+las conexiones de red que ha realizado. &gt;<img role="img" aria-label="Pasted image 20240909092151.png" src="Pasted image 20240909092151.png" title="wikilink" alt="Pasted image 20240909092151.png" /></p>
+<hr />
+<p><strong>Event ID 6,7,8: Carga de Driver/Imagen &amp; creación de Hilo
+Remoto</strong> Se usan comúnmente para detectar técnicas de evasión de
+defensa, como la inyección de procesos, donde un atacante podría
+inyectar su código en un proceso separado para ayudar a lograr su
+objetivo. Ésta técnica se usa para evadir antivirus y demás, e
+investigar estos eventos puede ser muy ruidoso con muchos falsos
+positivos. Pero podemos valernos del GUID de un evento interesante para
+facilitar la búsqueda.</p>
+<blockquote>
+<figure>
+<img role="img" aria-label="Pasted image 20240909092948.png" src="Pasted image 20240909092948.png" title="wikilink" alt="Pasted image 20240909092948.png" />
+<figcaption aria-hidden="true">Pasted image
+20240909092948.png</figcaption>
+</figure>
+</blockquote>
+<blockquote>
+<figure>
+<img role="img" aria-label="Pasted image 20240909093809.png" src="Pasted image 20240909093809.png" title="wikilink" alt="Pasted image 20240909093809.png" />
+<figcaption aria-hidden="true">Pasted image
+20240909093809.png</figcaption>
+</figure>
+</blockquote>
+<hr />
+<p><strong>Event ID 10: Acceso al Proceso</strong> Investigamos este
+Sysmon ID cuando cuando se busca un posible acceso de credenciales hacia
+el proceso Lsass.exe (servicio del subsistema de la autoridad de
+seguridad local). Los atacantes frecuentemente atacan este proceso para
+leer su memoria, obtener credenciales y moverse dentro del entorno.</p>
+<hr />
+<p><strong>Event ID 22: DNS Event (DNS query)</strong> Este es un evento
+muy importante, pues nos dice casi de inmediato cuál máquina está
+comprometida. Podemos ver quienes están consultando un
+<code>Domain Generated Algorithm</code>, buscar con la process GUID, y
+observar la cadena de eventos para detectar si es un compromiso.</p>
+<hr />
+</body>
+</html>

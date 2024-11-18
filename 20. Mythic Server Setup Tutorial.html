@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-09-25" />
+  <title>20. Mythic Server Setup Tutorial</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">20. Mythic Server Setup Tutorial</h1>
+<p class="date">2024-09-25</p>
+</header>
+<h1 id="mythic-server-setup-tutorial-day-20">Mythic Server Setup
+Tutorial | Day 20</h1>
+<hr />
+<h2 id="resumen">Resumen</h2>
+<blockquote>
+<p>Aprenderemos a configurar nuestra propia instancia de Mythic C2.</p>
+</blockquote>
+<hr />
+<h1 id="pasos-o-procedimientos">Pasos o Procedimientos</h1>
+<h2 id="crear-una-instancia-de-ubuntu">Crear una instancia de
+Ubuntu</h2>
+<p>==Despliegue del servidor Ubuntu para Fleet==</p>
+<p>Seleccionamos las siguientes características y damos desplegar: -
+Shared CPU - Toronto - Canadá - Ubuntu 22.04 LTS x64 - 2 CPU y 4GB de
+RAM (recomendado) - No “Auto Backups” - No IPv6 - Nombre del servidor:
+MyDFIR-Mythic-FlamingBl4d3</p>
+<p>Damos “Deploy” y esperamos hasta que se instale: <img role="img" aria-label="Pasted image 20240925203533.png" src="Pasted image 20240925203533.png" title="wikilink" alt="Pasted image 20240925203533.png" /></p>
+<h2 id="preparar-los-firewall-para-acceder-a-mythic-y-c2">Preparar los
+Firewall para acceder a Mythic y C2</h2>
+<p>Aquí habilitaremos el acceso a Mythic únicamente desde los agentes C2
+(Linux SSH Server y Windows Server) y desde mi máquina.</p>
+<p>==Configurar un nuevo Firewall==</p>
+<p>Creamos el Firewall y especificamos las IP permitidas: <img role="img" aria-label="Pasted image 20240925220447.png" src="Pasted image 20240925220447.png" title="wikilink" alt="Pasted image 20240925220447.png" /></p>
+<p>Aplicamos el Firewall a la máquina Mythic: <img role="img" aria-label="Pasted image 20240925220935.png" src="Pasted image 20240925220935.png" title="wikilink" alt="Pasted image 20240925220935.png" /></p>
+<h2 id="preparación-del-servidor-e-instalación-de-mythic">Preparación
+del servidor e instalación de Mythic</h2>
+<p>==Iniciamos sesión mediante ssh y actualizamos los repositorios:
+==</p>
+<pre><code>apt-get update &amp;&amp; apt-get upgrade -y</code></pre>
+<p>==Instalamos Docker:==</p>
+<pre><code>apt install docker-compose</code></pre>
+<p>==También requiere Make:==</p>
+<pre><code>apt install make</code></pre>
+<p>==Descargamos e instalamos el repositorio de Mythic:==</p>
+<pre><code>git clone https://github.com/its-a-feature/Mythic</code></pre>
+<p>Revisamos la descarga: <img role="img" aria-label="Pasted image 20240925210528.png" src="Pasted image 20240925210528.png" title="wikilink" alt="Pasted image 20240925210528.png" /></p>
+<p>Abrimos el directorio “Mythic” recién descargado y ejecutamos
+<code>install_docket_ubuntu.sh</code>: <img role="img" aria-label="Pasted image 20240925211045.png" src="Pasted image 20240925211045.png" title="wikilink" alt="Pasted image 20240925211045.png" /></p>
+<p>==Levantamos Mythic== Primero nos aseguramos de estar en el
+directorio “Mythic” y ejecutamos el comando <code>make</code>: <img role="img" aria-label="Pasted image 20240925211934.png" src="Pasted image 20240925211934.png" title="wikilink" alt="Pasted image 20240925211934.png" /></p>
+<blockquote>
+<p>[!bug] Nota Si al ejecutar el comando <code>make</code> recibimos el
+error de
+<code>docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?</code>,
+debemos probar reiniciando el servicio de docker.</p>
+</blockquote>
+<p>Ejecutamos el comando para levantar Mythic</p>
+<pre><code>./mythic-cli start</code></pre>
+<p>Averiguamos la contraseña de Mythic abriendo el archivo ==oculto==
+<code>.env</code>: <img role="img" aria-label="Pasted image 20240925223516.png" src="Pasted image 20240925223516.png" title="wikilink" alt="Pasted image 20240925223516.png" /></p>
+<p>Accedemos a la web GUI de Mythic: <code>User: mythic_admin</code>
+<code>Pass: Oeq5iKIUipFmsTvpL4WL9wOYMiVnFL</code> <img role="img" aria-label="Pasted image 20240925223902.png" src="Pasted image 20240925223902.png" title="wikilink" alt="Pasted image 20240925223902.png" /></p>
+<h2 id="descargar-e-instalar-kali-para-realizar-los-ataques">Descargar e
+Instalar Kali (para realizar los ataques)</h2>
+<p>Nos dirigimos a la página web de kali y descargamos una versión para
+virtualizar y la instalamos: <img role="img" aria-label="Pasted image 20240925203859.png" src="Pasted image 20240925203859.png" title="wikilink" alt="Pasted image 20240925203859.png" /></p>
+<p>Instalamos el Kali en nuestra máquina real. Lo usaremos en el próximo
+día.</p>
+</body>
+</html>

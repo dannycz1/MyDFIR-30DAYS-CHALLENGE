@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-09-25" />
+  <title>17. Create Alerts and Dashboards in Kibana (3)</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">17. Create Alerts and Dashboards in Kibana (3)</h1>
+<p class="date">2024-09-25</p>
+</header>
+<h1 id="how-to-create-alerts-and-dashboards-in-kibana-day-17-34">How To
+Create Alerts and Dashboards in Kibana | Day 17 (3/4)</h1>
+<hr />
+<h2 id="resumen">Resumen</h2>
+<blockquote>
+<p>Aquí crearemos dashboard, (mapas y tabla) enfocado en los de intento
+de inicio de sesión de RDP en el Windows Server. Además crearemos Tablas
+tanto para SSH y RDP. Con esto obtendremos mucha mas información de un
+vistazo.</p>
+</blockquote>
+<hr />
+<h2 id="crear-mapas">1. Crear mapas</h2>
+<h4 id="crear-mapas-de-autenticaciones-fallidas">1.1 Crear Mapas de
+autenticaciones fallidas</h4>
+<p>==Mapa de eventos de autenticación fallida==</p>
+<p>Primero introducimos la consulta en el cuadro de búsqueda (no veremos
+nada porque falta agregar una capa de visualización): <img role="img" aria-label="Pasted image 20240925091516.png" src="Pasted image 20240925091516.png" title="wikilink" alt="Pasted image 20240925091516.png" /></p>
+<p>Vamos a Mapas y creamos una nueva capa de visualización
+<code>Add Layer -&gt; Choropleth</code>: <img role="img" aria-label="Pasted image 20240925082936.png" src="Pasted image 20240925082936.png" title="wikilink" alt="Pasted image 20240925082936.png" /></p>
+<p>En el siguiente paso no hacemos nada, solo guardamos el mapa: <img role="img" aria-label="Pasted image 20240925083407.png" src="Pasted image 20240925083407.png" title="wikilink" alt="Pasted image 20240925083407.png" /></p>
+<p>Guardamos y añadimos al dashboard existente (creado originalmente
+para eventos SSH pero lo usaremos para todo): <img role="img" aria-label="Pasted image 20240925083905.png" src="Pasted image 20240925083905.png" title="wikilink" alt="Pasted image 20240925083905.png" /></p>
+<hr />
+<h4 id="crear-mapas-de-autenticaciones-exitosas">1.1 Crear Mapas de
+autenticaciones exitosas</h4>
+<p>==Creamos la consulta KQL==</p>
+<p>Para la autenticación exitosa no nos interesan todos los
+<strong>tipos de autenticación</strong>, sino <a href="16.%20Create%20Alerts%20and%20Dashboards%20in%20Kibana%20(2)#Creación%20de%20alerta%20(modo%20automático,%20menos%20efectivo)">solo
+las autenticaciones de tipo 7 y 10</a>. Para especificar esto
+necesitamos saber el nombre del campo, si hacemos una búsqueda rápida en
+Discover, podemos revisar los registros para ver el nombre del campo:
+<img role="img" aria-label="Pasted image 20240925100103.png" src="Pasted image 20240925100103.png" title="wikilink" alt="Pasted image 20240925100103.png" /></p>
+<p>Conociendo el nombre de campo, vamos a filtrar los tipos de
+autenticación exitosos: <img role="img" aria-label="Pasted image 20240925100624.png" src="Pasted image 20240925100624.png" title="wikilink" alt="Pasted image 20240925100624.png" /></p>
+<p>Guardamos la consulta: <img role="img" aria-label="Pasted image 20240925100721.png" src="Pasted image 20240925100721.png" title="wikilink" alt="Pasted image 20240925100721.png" /></p>
+<p>==Creamos el mapa==</p>
+<p>Como ya tenemos el mapa de <code>Failed Authentication</code>
+simplemente lo duplicamos y colocamos la búsqueda KQL: <img role="img" aria-label="Pasted image 20240925104200.png" src="Pasted image 20240925104200.png" title="wikilink" alt="Pasted image 20240925104200.png" /></p>
+<p>Por último guardamos Todo el mapa con el botón “Save”. ___ ## 2.
+Crear Tablas con la IP origen y el usuario objetivo</p>
+<h4 id="crear-las-tablas-para-ssh">2.1 Crear las Tablas para SSH</h4>
+<p>==Creando las tablas para los SSH Authentication Failed y
+Successful== <img role="img" aria-label="Pasted image 20240925105849.png" src="Pasted image 20240925105849.png" title="wikilink" alt="Pasted image 20240925105849.png" /></p>
+<p>Colocamos la consulta KQL adecuada: <img role="img" aria-label="Pasted image 20240925110047.png" src="Pasted image 20240925110047.png" title="wikilink" alt="Pasted image 20240925110047.png" /></p>
+<p>Elegimos el formato de Tabla: <img role="img" aria-label="Pasted image 20240925110909.png" src="Pasted image 20240925110909.png" title="wikilink" alt="Pasted image 20240925110909.png" /></p>
+<p>Añadimos campos para visualizar en la tabla (source.ip, user.name y
+source.geo.country_name): <img role="img" aria-label="Pasted image 20240925110352.png" src="Pasted image 20240925110352.png" title="wikilink" alt="Pasted image 20240925110352.png" /></p>
+<p>Va quedando así: <img role="img" aria-label="Pasted image 20240925111643.png" src="Pasted image 20240925111643.png" title="wikilink" alt="Pasted image 20240925111643.png" /></p>
+<p>==Configurando los campos para una mejor visualización==</p>
+<p>Hacemos clic en el campo user.name: <img role="img" aria-label="Pasted image 20240925112304.png" src="Pasted image 20240925112304.png" title="wikilink" alt="Pasted image 20240925112304.png" /></p>
+<p>Y modificamos dos valores de la configuración: <img role="img" aria-label="Pasted image 20240925112618.png" src="Pasted image 20240925112618.png" title="wikilink" alt="Pasted image 20240925112618.png" /></p>
+<p>Hacemos lo mismo para la columna <code>source.ip</code>: <img role="img" aria-label="Pasted image 20240925112808.png" src="Pasted image 20240925112808.png" title="wikilink" alt="Pasted image 20240925112808.png" /></p>
+<p>Hacemos lo mismo para <code>source.geo.country_name</code>: <img role="img" aria-label="Pasted image 20240925122209.png" src="Pasted image 20240925122209.png" title="wikilink" alt="Pasted image 20240925122209.png" /></p>
+<p>Ordenamos la tabla de forma Descendente y damos Guardar: <img role="img" aria-label="Pasted image 20240925113029.png" src="Pasted image 20240925113029.png" title="wikilink" alt="Pasted image 20240925113029.png" /></p>
+<p>Quedará así: <img role="img" aria-label="Pasted image 20240925113308.png" src="Pasted image 20240925113308.png" title="wikilink" alt="Pasted image 20240925113308.png" /></p>
+<p>Ahora lo duplicamos para ver las Autenticaciones SSH exitosas (El KQL
+sería:
+<code>system.auth.ssh.event: * and agent.name: MyDFIR-Linux-FlamingBl4d3 and system.auth.ssh.event: Accepted</code>):
+<img role="img" aria-label="Pasted image 20240925123528.png" src="Pasted image 20240925123528.png" title="wikilink" alt="Pasted image 20240925123528.png" /></p>
+<h4 id="crear-las-tablas-para-rdp">2.1 Crear las Tablas para RDP</h4>
+<p>==Duplicamos cualquier tabla para crear los RDP Failed== Simplemente
+editamos la consulta KQL para ver los datos de RDP Failed: &gt;
+<code>event.code: 4625 and agent.name: MyDFIR-WIN-FlamingBl4d3</code></p>
+<p>==Duplicamos cualquier tabla para crear los RDP Successful==
+Simplemente editamos la consulta KQL para ver los datos de RDP Failed:
+&gt;
+<code>event.code: 4624 and agent.name: MyDFIR-WIN-FlamingBl4d3 and (winlog.event_data.LogonType: 10 or winlog.event_data.LogonType: 7)</code></p>
+<p>==Y así quedan las tablas:== <img role="img" aria-label="Pasted image 20240925124553.png" src="Pasted image 20240925124553.png" title="wikilink" alt="Pasted image 20240925124553.png" /></p>
+<h2 id="resultado-final-mapas-y-tablas">Resultado Final (Mapas y
+Tablas)</h2>
+<figure>
+<img role="img" aria-label="Pasted image 20240925124903.png" src="Pasted image 20240925124903.png" title="wikilink" alt="Pasted image 20240925124903.png" />
+<figcaption aria-hidden="true">Pasted image
+20240925124903.png</figcaption>
+</figure>
+<p>!!! Importante Antes de salir debe guardar la visualización con el
+boton de “Save” <img role="img" aria-label="Pasted image 20240925124931.png" src="Pasted image 20240925124931.png" title="wikilink" alt="Pasted image 20240925124931.png" /></p>
+</body>
+</html>

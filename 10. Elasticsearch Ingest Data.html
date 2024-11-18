@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-09-10" />
+  <title>10. Elasticsearch Ingest Data</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">10. Elasticsearch Ingest Data</h1>
+<p class="date">2024-09-10</p>
+</header>
+<h1 id="elasticsearch-ingest-data-tutorial-day-10">Elasticsearch Ingest
+Data Tutorial | Day 10</h1>
+<hr />
+<h2 id="resumen">Resumen</h2>
+<blockquote>
+<p>Aquí veremos a Elasticsearch ingerir con éxito registros de Sysmon y
+Windows Defender desde Servidor de Windows</p>
+</blockquote>
+<hr />
+<h2 id="conceptos-clave">Conceptos Clave</h2>
+<ul>
+<li><strong>Concepto 1</strong>: Explicación breve.</li>
+<li><strong>Concepto 2</strong>: Explicación breve.</li>
+<li><strong>Concepto 3</strong>: Explicación breve.</li>
+</ul>
+<hr />
+<h2 id="pasos-o-procedimientos">Pasos o Procedimientos</h2>
+<p>==Integración de registros de Sysmon en la política==</p>
+<p>Iniciamos sesión en Elasticsearch y en el panel principal
+seleccionamos <code>Add integrations</code> <img role="img" aria-label="Pasted image 20240910225423.png" src="Pasted image 20240910225423.png" title="wikilink" alt="Pasted image 20240910225423.png" /></p>
+<p>Podemos usar el buscador para encontrar la sección
+<code>Custom Windows Event Logs</code> <img role="img" aria-label="Pasted image 20240910225805.png" src="Pasted image 20240910225805.png" title="wikilink" alt="Pasted image 20240910225805.png" /></p>
+<p>Seleccionar <code>Add Custom Windows Event Logs</code>: <img role="img" aria-label="Pasted image 20240910230200.png" src="Pasted image 20240910230200.png" title="wikilink" alt="Pasted image 20240910230200.png" /></p>
+<blockquote>
+<p>[!tip]- Cómo encontrar el “Channel Name” de Sysmon Simplemente
+debemos revisar las propiedades de Sysmon -&gt; Operational. El Full
+Name es el <code>Channel Name</code>: <img role="img" aria-label="Pasted image 20240910231208.png" src="Pasted image 20240910231208.png" title="wikilink" alt="Pasted image 20240910231208.png" /></p>
+</blockquote>
+<p>Rellenar con los datos del ==Paso 1==: <img role="img" aria-label="Pasted image 20240910231453.png" src="Pasted image 20240910231453.png" title="wikilink" alt="Pasted image 20240910231453.png" /></p>
+<p>Elegir el <code>Agent Policy name</code> en el ==Paso 2==: <img role="img" aria-label="Pasted image 20240910231801.png" src="Pasted image 20240910231801.png" title="wikilink" alt="Pasted image 20240910231801.png" /></p>
+<p>Guardamos y continuamos <img role="img" aria-label="Pasted image 20240910231955.png" src="Pasted image 20240910231955.png" title="wikilink" alt="Pasted image 20240910231955.png" /></p>
+<p>Hasta este punto hemos integrado Sysmon Logs a la política.</p>
+<hr />
+<p>==Integración de registros de Windows Defender en la política (casi
+idéntico al anterior)==</p>
+<p>Podemos usar el buscador para encontrar la sección
+<code>Custom Windows Event Logs</code> <img role="img" aria-label="Pasted image 20240910225805.png" src="Pasted image 20240910225805.png" title="wikilink" alt="Pasted image 20240910225805.png" /></p>
+<p>Seleccionar <code>Add Custom Windows Event Logs</code>: <img role="img" aria-label="Pasted image 20240910230200.png" src="Pasted image 20240910230200.png" title="wikilink" alt="Pasted image 20240910230200.png" /></p>
+<blockquote>
+<p>[!tip]- Cómo encontrar el “Channel Name” de Windows Defender
+Simplemente debemos revisar las propiedades de Sysmon -&gt; Operational.
+El Full Name es el <code>Channel Name</code>: <img role="img" aria-label="Pasted image 20240910233052.png" src="Pasted image 20240910233052.png" title="wikilink" alt="Pasted image 20240910233052.png" /></p>
+</blockquote>
+<p>Rellenar con los datos del ==Paso 1==: Sólo queremos algunos eventos
+de Windows Defender <img role="img" aria-label="Pasted image 20240910233411.png" src="Pasted image 20240910233411.png" title="wikilink" alt="Pasted image 20240910233411.png" /> <img role="img" aria-label="Pasted image 20240910233605.png" src="Pasted image 20240910233605.png" title="wikilink" alt="Pasted image 20240910233605.png" /></p>
+<p>Elegir el <code>Agent Policy name</code> en el ==Paso 2==: <img role="img" aria-label="Pasted image 20240910231801.png" src="Pasted image 20240910231801.png" title="wikilink" alt="Pasted image 20240910231801.png" /></p>
+<p>Guardamos y continuamos <img role="img" aria-label="Pasted image 20240910231955.png" src="Pasted image 20240910231955.png" title="wikilink" alt="Pasted image 20240910231955.png" /></p>
+<hr />
+<p>==Prueba==</p>
+<p>Solo para probar podemos revisar si hay eventos de Windows Defender
+cargados, para ello buscamos en la herramienta <code>Discover</code> y
+buscamos diferentes eventos con <code>winlog.event_id:xx</code>: <img role="img" aria-label="Pasted image 20240910234518.png" src="Pasted image 20240910234518.png" title="wikilink" alt="Pasted image 20240910234518.png" /></p>
+<p>Con esto queda probado que Elasticsearch está ingiriendo registros de
+Windows Defender.</p>
+</body>
+</html>

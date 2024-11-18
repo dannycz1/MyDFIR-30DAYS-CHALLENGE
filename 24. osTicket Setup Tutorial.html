@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-09-29" />
+  <title>24. osTicket Setup Tutorial</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">24. osTicket Setup Tutorial</h1>
+<p class="date">2024-09-29</p>
+</header>
+<h1 id="osticket-setup-tutorial-day-24">osTicket Setup Tutorial | Day
+24</h1>
+<hr />
+<h2 id="resumen">Resumen</h2>
+<blockquote>
+<p>Instalación y configuración del osTicket, para la emisión de
+tickets.</p>
+</blockquote>
+<hr />
+<h2 id="creación-del-windows-server-host">1. Creación del Windows Server
+Host</h2>
+<p>==Creación del host (VULTR)== Seleccionamos las siguientes
+características y damos desplegar: - Shared CPU - Toronto - Canadá -
+Windows Standard 2022 - Regular Cloud Compute &gt; 55 Gb SSD (el mas
+barato) - No “Auto Backups” - No IPv6 - Si Virtual Private Cloud 2.0
+(elegir nuestra única VPC) - Firewall Group: blank (todos tendrán acceso
+al servidor) - Nombre del servidor: MyDFIR-osTicket-FlamingBl4d3 <img role="img" aria-label="Pasted image 20240930090617.png" src="Pasted image 20240930090617.png" title="wikilink" alt="Pasted image 20240930090617.png" /></p>
+<p>==Establecer Firewall de VULTR== <img role="img" aria-label="Pasted image 20240930090708.png" src="Pasted image 20240930090708.png" title="wikilink" alt="Pasted image 20240930090708.png" /></p>
+<h2 id="descargamos-e-instalamos-xampp">Descargamos e instalamos
+XAMPP</h2>
+<p>Descargamos XAMPP <img role="img" aria-label="Pasted image 20240930091523.png" src="Pasted image 20240930091523.png" title="wikilink" alt="Pasted image 20240930091523.png" /></p>
+<p>==Instalamos XAMPP==</p>
+<p>Ejecutamos el instalador y damos next a todo (solo observar que se
+instala en C:): <img role="img" aria-label="Pasted image 20240930092838.png" src="Pasted image 20240930092838.png" title="wikilink" alt="Pasted image 20240930092838.png" /></p>
+<p>==Configuramos una cuenta root para permitirnos el acceso==
+Modificamos la cuenta root para poder cambiar la IP de apache y poner
+nuestra IP pública (permitir el acceso desde Internet, el Firewall de
+VULTR nos protege): <img role="img" aria-label="Pasted image 20240930093207.png" src="Pasted image 20240930093207.png" title="wikilink" alt="Pasted image 20240930093207.png" /></p>
+<figure>
+<img role="img" aria-label="Pasted image 20240930093359.png" src="Pasted image 20240930093359.png" title="wikilink" alt="Pasted image 20240930093359.png" />
+<figcaption aria-hidden="true">Pasted image
+20240930093359.png</figcaption>
+</figure>
+<p>Configuramos <code>hostname</code> y <code>password</code> como en la
+imagen (contraseña Winter2024!) <img role="img" aria-label="Pasted image 20240930094641.png" src="Pasted image 20240930094641.png" title="wikilink" alt="Pasted image 20240930094641.png" /> &gt;[!warning] Importante
+&gt;En ésta ventana damos clic en “Go” y se abrirá otra ventana y
+nuevamente damos clic en “Go”. &gt;Clic en “Go” 2 veces!!!</p>
+<figure>
+<img role="img" aria-label="Pasted image 20240930094106.png" src="Pasted image 20240930094106.png" title="wikilink" alt="Pasted image 20240930094106.png" />
+<figcaption aria-hidden="true">Pasted image
+20240930094106.png</figcaption>
+</figure>
+<p>==Publicamos XAMPP (para permitir que se pueda tener acceso a
+PhpMyAdmin desde Internet)==</p>
+<p>==Editamos los archivos “C:\xamp\properties” y
+“C:\xamp\phpMyAdmin\config.inc.php”== C:\xamp\properties <img role="img" aria-label="Pasted image 20240930095100.png" src="Pasted image 20240930095100.png" title="wikilink" alt="Pasted image 20240930095100.png" /></p>
+<p>C:\xamp\phpMyAdmin\config.inc.php <img role="img" aria-label="Pasted image 20240930100813.png" src="Pasted image 20240930100813.png" title="wikilink" alt="Pasted image 20240930100813.png" /></p>
+<p>Creamos una regla y habilitamos el acceso web desde el Firewall de
+Windows: <img role="img" aria-label="Pasted image 20240930100502.png" src="Pasted image 20240930100502.png" title="wikilink" alt="Pasted image 20240930100502.png" /></p>
+<p>Si ingresamos ahora a Admin de Apache veremos un error con el usuario
+“PMA”: <img role="img" aria-label="Pasted image 20240930103434.png" src="Pasted image 20240930103434.png" title="wikilink" alt="Pasted image 20240930103434.png" /></p>
+<p>Habilitamos también el acceso a éste usuario para corregir el error:
+<img role="img" aria-label="Pasted image 20240930103830.png" src="Pasted image 20240930103830.png" title="wikilink" alt="Pasted image 20240930103830.png" /> <img role="img" aria-label="Pasted image 20240930104004.png" src="Pasted image 20240930104004.png" title="wikilink" alt="Pasted image 20240930104004.png" /> Luego de esto ya no nos dará
+error.</p>
+<h2 id="descarga-e-instalación-de-osticket">3. Descarga e instalación de
+osTicket</h2>
+<p>==Descarga de osTicket== Descargamos osTicket <img role="img" aria-label="Pasted image 20240930105312.png" src="Pasted image 20240930105312.png" title="wikilink" alt="Pasted image 20240930105312.png" /> <img role="img" aria-label="Pasted image 20240930105504.png" src="Pasted image 20240930105504.png" title="wikilink" alt="Pasted image 20240930105504.png" /> <img role="img" aria-label="Pasted image 20240930105609.png" src="Pasted image 20240930105609.png" title="wikilink" alt="Pasted image 20240930105609.png" /> <img role="img" aria-label="Pasted image 20240930105701.png" src="Pasted image 20240930105701.png" title="wikilink" alt="Pasted image 20240930105701.png" /> <img role="img" aria-label="Pasted image 20240930105737.png" src="Pasted image 20240930105737.png" title="wikilink" alt="Pasted image 20240930105737.png" /></p>
+<p>Se descargará un archivo, debemos descomprimirlo y copiamos las
+carpetas <code>scripts</code> y <code>upload</code>:</p>
+<p>Creamos el directorio “C:\xampp\htdocs\osticket” y pegamos todo ahí
+(esto permitirá que el servidor apache nos dé acceso al script vía web…
+la instalación se hace por ese medio): <img role="img" aria-label="Pasted image 20240930113635.png" src="Pasted image 20240930113635.png" title="wikilink" alt="Pasted image 20240930113635.png" /> <img role="img" aria-label="Pasted image 20240930113734.png" src="Pasted image 20240930113734.png" title="wikilink" alt="Pasted image 20240930113734.png" /></p>
+<hr />
+<p>==Crear la base de datos== Antes de la instalación debemos crear la
+base de datos que usará osTicket: <img role="img" aria-label="Pasted image 20240930120015.png" src="Pasted image 20240930120015.png" title="wikilink" alt="Pasted image 20240930120015.png" /> . Damos acceso a la base de
+datos a nuestro usuario <code>root</code> de phpMyAdmin: <img role="img" aria-label="Pasted image 20240930120411.png" src="Pasted image 20240930120411.png" title="wikilink" alt="Pasted image 20240930120411.png" /> <img role="img" aria-label="Pasted image 20240930120524.png" src="Pasted image 20240930120524.png" title="wikilink" alt="Pasted image 20240930120524.png" /></p>
+<hr />
+<p>==Instalación de osTicket== Ingresamos vía web a
+<code>216.128.179.240/osticket/upload</code>: <img role="img" aria-label="Pasted image 20240930114718.png" src="Pasted image 20240930114718.png" title="wikilink" alt="Pasted image 20240930114718.png" /> clic en “continue”.</p>
+<p>La siguiente ventana nos advierte de un error, por los que seguimos
+la indicación para corregirlo: <img role="img" aria-label="Pasted image 20240930115014.png" src="Pasted image 20240930115014.png" title="wikilink" alt="Pasted image 20240930115014.png" /> <img role="img" aria-label="Pasted image 20240930115256.png" src="Pasted image 20240930115256.png" title="wikilink" alt="Pasted image 20240930115256.png" /> <img role="img" aria-label="Pasted image 20240930115401.png" src="Pasted image 20240930115401.png" title="wikilink" alt="Pasted image 20240930115401.png" /></p>
+<p>Damos clic en “continue” y rellenamos los datos: <img role="img" aria-label="Pasted image 20240930121446.png" src="Pasted image 20240930121446.png" title="wikilink" alt="Pasted image 20240930121446.png" /> <img role="img" aria-label="Pasted image 20240930121457.png" src="Pasted image 20240930121457.png" title="wikilink" alt="Pasted image 20240930121457.png" /> <img role="img" aria-label="Pasted image 20240930121518.png" src="Pasted image 20240930121518.png" title="wikilink" alt="Pasted image 20240930121518.png" /></p>
+<p>Y ya está instalado: <img role="img" aria-label="Pasted image 20240930121912.png" src="Pasted image 20240930121912.png" title="wikilink" alt="Pasted image 20240930121912.png" /> <strong>Your
+osTicket URL:</strong> http://155.138.138.27/osticket/upload/
+<strong>Your Staff Control Panel:</strong>
+http://155.138.138.27/osticket/upload/scp/admin.php</p>
+<p>Por último, como nos indica en el mensaje anterior, modificamos los
+permisos del archivo ost-config.php (por seguridad). Abrimos Powershell
+en modo ADMINISTRADOR: <img role="img" aria-label="Pasted image 20240930122602.png" src="Pasted image 20240930122602.png" title="wikilink" alt="Pasted image 20240930122602.png" /></p>
+<h2 id="acceso-a-osticket-desde-la-web-y-creacion-de-usuarios">Acceso a
+osTicket desde la web y creacion de usuarios</h2>
+<p>Probamos acceder al sistema desde nuestra maquina real usando los
+enlaces que se nos proporcionó (clic en el siguiente enlace):</p>
+<p>Sistema de administrador: http://155.138.138.27/osticket/upload/scp
+<img role="img" aria-label="Pasted image 20240930123351.png" src="Pasted image 20240930123351.png" title="wikilink" alt="Pasted image 20240930123351.png" /> <img role="img" aria-label="Pasted image 20240930123228.png" src="Pasted image 20240930123228.png" title="wikilink" alt="Pasted image 20240930123228.png" /></p>
+<p>Sistema de clientes: http://155.138.138.27/osticket/upload/ <img role="img" aria-label="Pasted image 20240930123134.png" src="Pasted image 20240930123134.png" title="wikilink" alt="Pasted image 20240930123134.png" /></p>
+<p>==Creación de usuarios==</p>
+<p>Lo dejamos a su imaginación!</p>
+</body>
+</html>
