@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-09-08" />
+  <title>7. Elastic Agent and Fleet Server Setup</title>
+  <style>
+html {
+color: #1a1a1a;
+background-color: #fdfdfd;
+}
+body {
+margin: 0 auto;
+max-width: 36em;
+padding-left: 50px;
+padding-right: 50px;
+padding-top: 50px;
+padding-bottom: 50px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+font-kerning: normal;
+}
+@media (max-width: 600px) {
+body {
+font-size: 0.9em;
+padding: 12px;
+}
+h1 {
+font-size: 1.8em;
+}
+}
+@media print {
+html {
+background-color: white;
+}
+body {
+background-color: transparent;
+color: black;
+font-size: 12pt;
+}
+p, h2, h3 {
+orphans: 3;
+widows: 3;
+}
+h2, h3, h4 {
+page-break-after: avoid;
+}
+}
+p {
+margin: 1em 0;
+}
+a {
+color: #1a1a1a;
+}
+a:visited {
+color: #1a1a1a;
+}
+img {
+max-width: 100%;
+}
+svg {
+height: auto;
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+margin-top: 1.4em;
+}
+h5, h6 {
+font-size: 1em;
+font-style: italic;
+}
+h6 {
+font-weight: normal;
+}
+ol, ul {
+padding-left: 1.7em;
+margin-top: 1em;
+}
+li > ol, li > ul {
+margin-top: 0;
+}
+blockquote {
+margin: 1em 0 1em 1.7em;
+padding-left: 1em;
+border-left: 2px solid #e6e6e6;
+color: #606060;
+}
+code {
+font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+font-size: 85%;
+margin: 0;
+hyphens: manual;
+}
+pre {
+margin: 1em 0;
+overflow: auto;
+}
+pre code {
+padding: 0;
+overflow: visible;
+overflow-wrap: normal;
+}
+.sourceCode {
+background-color: transparent;
+overflow: visible;
+}
+hr {
+background-color: #1a1a1a;
+border: none;
+height: 1px;
+margin: 1em 0;
+}
+table {
+margin: 1em 0;
+border-collapse: collapse;
+width: 100%;
+overflow-x: auto;
+display: block;
+font-variant-numeric: lining-nums tabular-nums;
+}
+table caption {
+margin-bottom: 0.75em;
+}
+tbody {
+margin-top: 0.5em;
+border-top: 1px solid #1a1a1a;
+border-bottom: 1px solid #1a1a1a;
+}
+th {
+border-top: 1px solid #1a1a1a;
+padding: 0.25em 0.5em 0.25em 0.5em;
+}
+td {
+padding: 0.125em 0.5em 0.25em 0.5em;
+}
+header {
+margin-bottom: 4em;
+text-align: center;
+}
+#TOC li {
+list-style: none;
+}
+#TOC ul {
+padding-left: 1.3em;
+}
+#TOC > ul {
+padding-left: 0;
+}
+#TOC a:not(:hover) {
+text-decoration: none;
+}
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">7. Elastic Agent and Fleet Server Setup</h1>
+<p class="date">2024-09-08</p>
+</header>
+<h1 id="elastic-agent-and-fleet-server-setup-tutorial-day-7">Elastic
+Agent and Fleet Server Setup Tutorial | Day 7</h1>
+<hr />
+<h2 id="resumen">Resumen</h2>
+<blockquote>
+<p>Veremos como añadir un servidor Fleet en Kibana para la
+administración centralizada de los agentes, instalar un Elastic Agent en
+el Windows Server e inscribirlo en el servidor Fleet.</p>
+</blockquote>
+<hr />
+<h2 id="conceptos-clave">Conceptos Clave</h2>
+<ul>
+<li><strong>Fleet Server:</strong> Este se encarga de controlar todos
+los agentes de Elastic de manera centralizada y fácil.</li>
+</ul>
+<hr />
+<h2 id="pasos-o-procedimientos">Pasos o Procedimientos</h2>
+<p>==Despliegue del servidor Ubuntu para Fleet==</p>
+<p>Seleccionamos las siguientes características y damos desplegar: -
+Dedicated CPU - Toronto - Canadá - Ubuntu 22.04 LTS x64 - 30 Gb NVMe (el
+mas barato) - No “Auto Backups” - No IPv6 - Si VPC 2.0 (elegimos nuestra
+VPC y tiene que mostrarnos la IP asignada) - Firewall Group: blank
+(todos tendrán acceso al servidor) - Nombre del servidor:
+MyDFIR-Fleet-Server-FlamingBl4d3</p>
+<p>Damos “Deploy” y esperamos hasta que se instale: <img role="img" aria-label="Pasted image 20240910112045.png" src="Pasted image 20240910112045.png" title="wikilink" alt="Pasted image 20240910112045.png" /></p>
+<p>==Habilitamos el acceso en los Firewall del Servidor ELK==</p>
+<p>La instancia ELK está dentro del Firewall virtual creado en VULTR.
+Debemos crear una regla para permitir que la instancia de Fleet-Server
+pueda acceder a al Servidor ELK, habilitemos su IP: <img role="img" aria-label="Pasted image 20240910112221.png" src="Pasted image 20240910112221.png" title="wikilink" alt="Pasted image 20240910112221.png" /></p>
+<p>Sin embargo mas allá de acceder al servidor ELK en sí, Fleet Server
+<a href>necesita acceder a Elasticsearch</a> para hacer el
+enrollment, por lo que debemos entrar en la máquina ELK y habilitar el
+puerto 9200 (puerto de Elasticsearch) para que pueda ser accedida por
+Fleet-Server <img role="img" aria-label="Pasted image 20240910112453.png" src="Pasted image 20240910112453.png" title="wikilink" alt="Pasted image 20240910112453.png" /></p>
+<p>==Configuración de Fleet Server== La sección <code>Fleet</code> de
+Kibana nos solicita añadir un servidor Fleet, entonces procedemos a
+añadir el servidor que acabamos de crear:</p>
+<p>Accedemos desde la web GUI de Kibana y seleccionamos Fleet: <img role="img" aria-label="Pasted image 20240908223549.png" src="Pasted image 20240908223549.png" title="wikilink" alt="Pasted image 20240908223549.png" /></p>
+<p><strong>PASO 1</strong>: Seleccionamos “Add Fleet Server” y luego la
+opción “Quick Start” <em>(Si se desea probar el modo “Advanced”, donde
+se crea una Autoridad Certificadora - CA, seguir el link al final)</em>:
+<img role="img" aria-label="Pasted image 20240910115048.png" src="Pasted image 20240910115048.png" title="wikilink" alt="Pasted image 20240910115048.png" /></p>
+<p>Vemos que la política del servidor Fleet fue creada y que que se
+generó el Token <img role="img" aria-label="Pasted image 20240910115215.png" src="Pasted image 20240910115215.png" title="wikilink" alt="Pasted image 20240910115215.png" /></p>
+<p><strong>Paso 2</strong>: Instalar Fleet Server en un host, para ello
+primeramente copiamos el comando: <img role="img" aria-label="Pasted image 20240908225653.png" src="Pasted image 20240908225653.png" title="wikilink" alt="Pasted image 20240908225653.png" /></p>
+<p>Y lo pegamos en el Fleet-Server Ubuntu (primero actualizamos los
+paquetes):</p>
+<pre class="shell"><code>apt-get update &amp;&amp; apt-get upgrade -y</code></pre>
+<p><img role="img" aria-label="Pasted image 20240908230240.png" src="Pasted image 20240908230240.png" title="wikilink" alt="Pasted image 20240908230240.png" /> <img role="img" aria-label="Pasted image 20240908232912.png" src="Pasted image 20240908232912.png" title="wikilink" alt="Pasted image 20240908232912.png" /></p>
+<blockquote>
+<p>Veremos también el mensaje de éxito en Elastic (próxima imagen)</p>
+</blockquote>
+<p>==Agregar Agentes a Windows Server==</p>
+<p>Seleccionamos continuar:<img role="img" aria-label="Pasted image 20240910115829.png" src="Pasted image 20240910115829.png" title="wikilink" alt="Pasted image 20240910115829.png" /></p>
+<p><strong>Paso 1</strong>: Introducimos el nombre: <img role="img" aria-label="Pasted image 20240908234311.png" src="Pasted image 20240908234311.png" title="wikilink" alt="Pasted image 20240908234311.png" /></p>
+<p><strong>Paso 2</strong>: Copiamos los comandos para completar la
+instalación en la instancia de Windows <img role="img" aria-label="Pasted image 20240908234750.png" src="Pasted image 20240908234750.png" title="wikilink" alt="Pasted image 20240908234750.png" /></p>
+<blockquote>
+<p>[!bug]- Solución a Posible Error Antes de Avanzar a los Siguiente
+Pasos Si vamos a la instancia de Windows vía RDP y ejecutamos en comando
+en PowerShell, pero si recibimos este error, está intentando registrarse
+mediante el servidor 443, pero Fleet no trabaja en ese puerto!! <img role="img" aria-label="Pasted image 20240908235916.png" src="Pasted image 20240908235916.png" title="wikilink" alt="Pasted image 20240908235916.png" /></p>
+<p>Si nos fijamos <code>Elastic -&gt; Fleet -&gt; Settings</code>
+veremos que se asignó al 443 (Esto fue error nuestro, pues al momento de
+especificar la URL no pusimos el puerto y lo asigno automáticamente al
+443): <img role="img" aria-label="Pasted image 20240909002429.png" src="Pasted image 20240909002429.png" title="wikilink" alt="Pasted image 20240909002429.png" /></p>
+<p>Sin embargo, Fleet trabaja por defecto en el 8220, corrijamos eso:
+<img role="img" aria-label="Pasted image 20240909002624.png" src="Pasted image 20240909002624.png" title="wikilink" alt="Pasted image 20240909002624.png" /></p>
+<p>Ahora intentemos de nuevo con el comando en Windows pero modificando
+el puerto al correcto (ya que el comando también se vio afectado por ese
+error de configuración): <img role="img" aria-label="Pasted image 20240909003129.png" src="Pasted image 20240909003129.png" title="wikilink" alt="Pasted image 20240909003129.png" /></p>
+</blockquote>
+<p>Ahora abramos ese puerto en el Firewall en el Fleet Server. Dado que
+la instancia de Fleet Server no participa del Firewall virtual de VULTR,
+entonces solo debemos modificar su propio Firewall: <img role="img" aria-label="Pasted image 20240909000657.png" src="Pasted image 20240909000657.png" title="wikilink" alt="Pasted image 20240909000657.png" /></p>
+<p>Vamos a la instancia de Windows vía RDP y ejecutemos en comando de
+instalación en PowerShell: <img role="img" aria-label="Pasted image 20240910123748.png" src="Pasted image 20240910123748.png" title="wikilink" alt="Pasted image 20240910123748.png" /></p>
+<p>Pero salta este error, está rechazando el certificado porque es
+autofirmado: <img role="img" aria-label="Pasted image 20240909003654.png" src="Pasted image 20240909003654.png" title="wikilink" alt="Pasted image 20240909003654.png" /></p>
+<p>Para solucionar esto ejecutemos el comando con la opción
+<code>--insecure</code>: <img role="img" aria-label="Pasted image 20240909003944.png" src="Pasted image 20240909003944.png" title="wikilink" alt="Pasted image 20240909003944.png" /></p>
+<p>Con esto ya se instaló exitosamente! <img role="img" aria-label="Pasted image 20240910124518.png" src="Pasted image 20240910124518.png" title="wikilink" alt="Pasted image 20240910124518.png" /> ___</p>
+<p>==Revision final==</p>
+<p>Vamos a <code>Elastic -&gt; Fleet -&gt; Agents</code> y observamos
+que nuestro host Windows se haya agregado: <img role="img" aria-label="Pasted image 20240909004705.png" src="Pasted image 20240909004705.png" title="wikilink" alt="Pasted image 20240909004705.png" /></p>
+<p>En la anterior Imagen vemos que el host Windows no está generando
+datos de CPU y Memoria, y si vamos a la sección registros veremos que
+tampoco ha llegado nada aún: <img role="img" aria-label="Pasted image 20240910124930.png" src="Pasted image 20240910124930.png" title="wikilink" alt="Pasted image 20240910124930.png" /></p>
+<p><strong>Esto es debido nuevamente al Firewall:</strong> - [ ] Debemos
+crear una Regla de Entrada con el puerto 9200 (Puerto donde
+Elasticsearch escucha a los Agentes) en el Firewall del servidor ELK:
+<img role="img" aria-label="Pasted image 20240910130750.png" src="Pasted image 20240910130750.png" title="wikilink" alt="Pasted image 20240910130750.png" /></p>
+<ul class="task-list">
+<li><label><input type="checkbox"></input>Permitir que la IP Pública de
+Windows Server acceda a ELK (Firewall de VULTR). <img role="img" aria-label="Pasted image 20240910131208.png" src="Pasted image 20240910131208.png" title="wikilink" alt="Pasted image 20240910131208.png" /></label></li>
+</ul>
+<p>Solo por curiosidad podemos ir a la herramienta
+<code>Discover</code>, buscamos con el nombre del host y podremos ver
+algunos registros: <img role="img" aria-label="Pasted image 20240910131624.png" src="Pasted image 20240910131624.png" title="wikilink" alt="Pasted image 20240910131624.png" /></p>
+<p>FIN !!!</p>
+<hr />
+<h2 id="capturas-de-pantalla-enlaces">Capturas de Pantalla /
+Enlaces</h2>
+<ul>
+<li><p>Asignación de puertos por defecto: <img role="img" aria-label="Pasted image 20240908235651.png" src="Pasted image 20240908235651.png" title="wikilink" alt="Pasted image 20240908235651.png" /></p></li>
+<li><p>Si se desea aprender mas sobre la instalación en modo “Advanced”
+y la creación de una CA:
+https://www.leveleffect.com/blog/home-lab-ingesting-data-with-agent-and-fleet</p></li>
+</ul>
+<hr />
+</body>
+</html>
